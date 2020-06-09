@@ -1,0 +1,2 @@
+<link rel="stylesheet" type="text/css" href="$popVenderModule.getTarget("/common/js/jdmsg/pop_mess.css")" media="all"/>
+<script type="text/javascript" src="$popVenderModule.getTarget("/common/js/jdmsg/jd-msg.js")"></script>

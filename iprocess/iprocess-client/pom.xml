@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+         xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>com.respect</groupId>
+        <artifactId>iprocess</artifactId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>iprocess-client</artifactId>
+    <name>iprocess-client</name>
+    <packaging>jar</packaging>
+    <version>1.0-SNAPSHOT</version>
+
+    <dependencies>
+
+        <!--<dependency>-->
+            <!--<groupId>com.jd.pop.crm</groupId>-->
+            <!--<artifactId>pop-crm-domain</artifactId>-->
+            <!--<version>${projectVersion}</version>-->
+        <!--</dependency>-->
+
+    </dependencies>
+
+    <build>
+        <finalName>iprocess-client-${version}</finalName>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>${maven-source-plugin.version}</version>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>jar-no-fork</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <configuration>
+                    <archive>
+                        <addMavenDescriptor>false</addMavenDescriptor>
+                        <manifest>
+                            <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+                        </manifest>
+                        <manifestEntries>
+                            <Implementation-Build>${buildNumber}</Implementation-Build>
+                            <Timestamp>${timestamp}</Timestamp>
+                        </manifestEntries>
+                    </archive>
+                </configuration>
+            </plugin>
+            <!--<plugin>-->
+                <!--<artifactId>maven-assembly-plugin</artifactId>-->
+                <!--<version>2.6</version>-->
+                <!--<executions>-->
+                    <!--<execution>&lt;!&ndash; Replace the placeholder of the pom by their values (used by the install plugin below)&ndash;&gt;-->
+                        <!--<id>replace-pom-placeholder</id>-->
+                        <!--<phase>deploy</phase>&lt;!&ndash; 绑定到生命周期deploy阶段上 &ndash;&gt;-->
+                        <!--<goals>-->
+                            <!--<goal>single</goal>-->
+                        <!--</goals>-->
+                        <!--<configuration>-->
+                            <!--<finalName>modified-pom</finalName>-->
+                            <!--<descriptors>-->
+                                <!--<descriptor>src/main/assemble/replacePomPlaceholder.xml</descriptor>-->
+                            <!--</descriptors>-->
+                        <!--</configuration>-->
+                    <!--</execution>-->
+                <!--</executions>-->
+            <!--</plugin>-->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.3</version>
+                <configuration>
+                    <source>1.6</source>
+                    <target>1.6</target>
+                    <encoding>utf-8</encoding>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-deploy-plugin</artifactId>
+                <version>2.7</version>
+                <executions>
+                    <execution>
+                        <id>default-deploy</id>
+                        <phase>none</phase>
+                    </execution>
+                    <execution>
+                        <id>my-deploy</id>
+                        <phase>deploy</phase>
+                        <goals>
+                            <goal>deploy-file</goal>
+                        </goals>
+                        <configuration>
+                            <repositoryId>jd-snapshots</repositoryId>
+                            <url>http://artifactory.360buy-develop.com/libs-snapshots-local</url>
+                            <generatePom>false</generatePom>
+                            <file>target/pop-crm-client-${version}.jar</file>
+                            <pomFile>target/modified-pom-replacePomPlaceholder/modified-pom/pom.xml</pomFile>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>

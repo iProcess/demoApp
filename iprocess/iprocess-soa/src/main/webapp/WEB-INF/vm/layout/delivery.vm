@@ -1,0 +1,54 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>#if($title)$title#else 无标题 #end</title>
+    <link rel="stylesheet" type="text/css" href="$assetModule.getTarget("/pop-ven/201007/skin/popbase.css")" media="all"/>
+	<link rel="stylesheet" type="text/css" href="$assetModule.getTarget("/pop-ven/201007/skin/myDispatching.css")" media="all"/>
+    <script type="text/javascript" src="$assetModule.getTarget("/js/jquery-1.4.2.min.js")"></script>
+    <script type="text/javascript" src="$assetModule.getTarget("/pop-ven/201007/js/pop.base.js")"></script>
+</head>
+<body id="mainframe">
+$screen_content
+## 防止cookie过期
+ <img src="$!passportModule.getTarget("/new/hello.aspx")" width="0" height="0"/>
+  <script type="text/javascript">
+
+       function onloadEvent(func) {
+         var one = window.onload
+         if (typeof window.onload != 'function') {
+             window.onload = func
+         }
+         else {
+             window.onload = function() {
+                 one();
+                 func();
+             }
+         }
+     }
+     function showtable() {
+         //var tablename = document.getElementById("mytable")
+         var tbxnTableArray = jQuery(".tb-xn");
+         for(var t =0;t<tbxnTableArray.length;t++){
+             var tablename = tbxnTableArray[t];
+             var li1 = tablename.getElementsByTagName("tr")
+             for (var i = 1; i < li1.length; i++) {//表格是这里i=1,即第一行不变色。其它为0比较好.
+                 //(i%2==0)?(li1[i].className="a1") : (li1[i].className=”a2″)
+                 //用这个或下面的if(i%2==0){…}
+                 li1[i].onmouseover = function() {
+                     this.style.backgroundColor = "#deffc4";//当鼠标指向时字体颜色
+                 }
+                 li1[i].onmouseout = function() {
+                     this.style.backgroundColor = ""
+                 }
+                 if (i % 2 == 0) {
+                     li1[i].className = "a1";
+                 } else {
+                     li1[i].className = "a2";
+                 }
+             }
+         }
+     }
+     onloadEvent(showtable);
+  </script>
+</body>
+</html>

@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd" default-autowire="byName">
+
+    <!--pop crm 测试环境数据源 added by laichendong-->
+    <bean id="popCrmDataSource" class="com.alibaba.druid.pool.DruidDataSource">
+        <property name="driverClassName" value="${pop-crm.crm.jdbc.driver}"/>
+        <property name="url" value="${pop-crm.crm.jdbc.url}"/>
+        <property name="username" value="${pop-crm.crm.jdbc.username}"/>
+        <property name="password" value="${pop-crm.crm.jdbc.password}"/>
+        <!--initialSize: 初始化连接-->
+        <property name="initialSize" value="10"/>
+        <!--maxIdle: 最大空闲连接-->
+        <!--<property name="maxIdle" value="5"/>-->
+        <!--minIdle: 最小空闲连接-->
+        <property name="minIdle" value="3"/>
+        <!--maxActive: 最大连接数量-->
+        <property name="maxActive" value="50"/>
+        <!--removeAbandoned: 是否自动回收超时连接-->
+        <property name="removeAbandoned" value="true"/>
+        <!--removeAbandonedTimeout: 超时时间(以秒数为单位)-->
+        <property name="removeAbandonedTimeout" value="300"/>
+        <!--maxWait: 超时等待时间以毫秒为单位 6000毫秒/1000等于60秒-->
+        <property name="maxWait" value="-1"/>
+
+
+
+        <!--   空闲连接被回收时间，回收空闲连接至minIdle指定数量，单位毫秒   -->
+        <!--<property name="minEvictableIdleTimeMillis" value="1800000"/>-->
+        <!--   检查空闲连接是否可被回收，如果小于等于0，不会启动检查线程，默认-1，单位毫秒   -->
+        <!--<property name="timeBetweenEvictionRunsMillis" value="14200000"/>-->
+        <!--   在每次空闲连接回收器线程(如果有)运行时检查的连接数量   -->
+        <!--<property name="numTestsPerEvictionRun" value="10"/>-->
+        <!--SQL查询,用来验证从连接池取出的连接-->
+        <!--<property name="validationQuery" value="select 1"/>-->
+        <!--&lt;!&ndash;   指明连接是否被空闲连接回收器(如果有)进行检验.如果检测失败,则连接将被从池中去除   &ndash;&gt;-->
+        <!--<property name="testWhileIdle" value="true"/>-->
+        <!--指明是否在从池中取出连接前进行检验,如果检验失败,-->
+        <!--则从池中去除连接并尝试取出另一个.-->
+        <!--注意: 设置为true后如果要生效,validationQuery参数必须设置为非空字符串-->
+        <!--<property name= "testOnBorrow" value="true" />-->
+        <!--指明是否在归还到池中前进行检验-->
+        <!--注意: 设置为true后如果要生效,validationQuery参数必须设置为非空字符串-->
+        <!--<property name= "testOnReturn" value="false" />-->
+
+        <!-- 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒 -->
+        <property name="timeBetweenEvictionRunsMillis" value="60000" />
+
+        <!-- 配置一个连接在池中最小生存的时间，单位是毫秒 -->
+        <property name="minEvictableIdleTimeMillis" value="300000" />
+
+        <property name="validationQuery" value="SELECT 'x'" />
+        <property name="testWhileIdle" value="true" />
+        <property name="testOnBorrow" value="false" />
+        <property name="testOnReturn" value="false" />
+
+        <property name="poolPreparedStatements" value="false" />
+
+        <!-- 配置监控统计拦截的filters -->
+        <property name="filters" value="stat" />
+    </bean>
+
+    <bean id="popCrmDataSource1" class="com.alibaba.druid.pool.DruidDataSource">
+        <property name="driverClassName" value="${pop-crm.crm.jdbc.driver1}"/>
+        <property name="url" value="${pop-crm.crm.jdbc.url1}"/>
+        <property name="username" value="${pop-crm.crm.jdbc.username1}"/>
+        <property name="password" value="${pop-crm.crm.jdbc.password1}"/>
+        <!--initialSize: 初始化连接-->
+        <property name="initialSize" value="10"/>
+        <!--maxIdle: 最大空闲连接-->
+        <!--<property name="maxIdle" value="5"/>-->
+        <!--minIdle: 最小空闲连接-->
+        <property name="minIdle" value="3"/>
+        <!--maxActive: 最大连接数量-->
+        <property name="maxActive" value="20"/>
+        <!--removeAbandoned: 是否自动回收超时连接-->
+        <property name="removeAbandoned" value="true"/>
+        <!--removeAbandonedTimeout: 超时时间(以秒数为单位)-->
+        <property name="removeAbandonedTimeout" value="300"/>
+        <!--maxWait: 超时等待时间以毫秒为单位 6000毫秒/1000等于60秒-->
+        <property name="maxWait" value="-1"/>
+
+        <!--   空闲连接被回收时间，回收空闲连接至minIdle指定数量，单位毫秒   -->
+        <!--<property name="minEvictableIdleTimeMillis" value="1800000"/>-->
+        <!--   检查空闲连接是否可被回收，如果小于等于0，不会启动检查线程，默认-1，单位毫秒   -->
+        <!--<property name="timeBetweenEvictionRunsMillis" value="14200000"/>-->
+        <!--   在每次空闲连接回收器线程(如果有)运行时检查的连接数量   -->
+        <!--<property name="numTestsPerEvictionRun" value="10"/>-->
+        <!--SQL查询,用来验证从连接池取出的连接-->
+        <!--<property name="validationQuery" value="select 1"/>-->
+        <!--&lt;!&ndash;   指明连接是否被空闲连接回收器(如果有)进行检验.如果检测失败,则连接将被从池中去除   &ndash;&gt;-->
+        <!--<property name="testWhileIdle" value="true"/>-->
+        <!--指明是否在从池中取出连接前进行检验,如果检验失败,-->
+        <!--则从池中去除连接并尝试取出另一个.-->
+        <!--注意: 设置为true后如果要生效,validationQuery参数必须设置为非空字符串-->
+        <!--<property name= "testOnBorrow" value="true" />-->
+        <!--指明是否在归还到池中前进行检验-->
+        <!--注意: 设置为true后如果要生效,validationQuery参数必须设置为非空字符串-->
+        <!--<property name= "testOnReturn" value="false" />-->
+
+        <!-- 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒 -->
+        <property name="timeBetweenEvictionRunsMillis" value="60000" />
+
+        <!-- 配置一个连接在池中最小生存的时间，单位是毫秒 -->
+        <property name="minEvictableIdleTimeMillis" value="300000" />
+
+        <property name="validationQuery" value="SELECT 'x'" />
+        <property name="testWhileIdle" value="true" />
+        <property name="testOnBorrow" value="false" />
+        <property name="testOnReturn" value="false" />
+
+        <property name="poolPreparedStatements" value="false" />
+
+        <!-- 配置监控统计拦截的filters -->
+        <property name="filters" value="stat" />
+    </bean>
+    <bean id="popCrmDataSource2" class="com.alibaba.druid.pool.DruidDataSource">
+        <property name="driverClassName" value="${pop-crm.crm.jdbc.driver2}"/>
+        <property name="url" value="${pop-crm.crm.jdbc.url2}"/>
+        <property name="username" value="${pop-crm.crm.jdbc.username2}"/>
+        <property name="password" value="${pop-crm.crm.jdbc.password2}"/>
+        <!--initialSize: 初始化连接-->
+        <property name="initialSize" value="10"/>
+        <!--maxIdle: 最大空闲连接-->
+        <!--<property name="maxIdle" value="5"/>-->
+        <!--minIdle: 最小空闲连接-->
+        <property name="minIdle" value="3"/>
+        <!--maxActive: 最大连接数量-->
+        <property name="maxActive" value="20"/>
+        <!--removeAbandoned: 是否自动回收超时连接-->
+        <property name="removeAbandoned" value="true"/>
+        <!--removeAbandonedTimeout: 超时时间(以秒数为单位)-->
+        <property name="removeAbandonedTimeout" value="300"/>
+        <!--maxWait: 超时等待时间以毫秒为单位 6000毫秒/1000等于60秒-->
+        <property name="maxWait" value="-1"/>
+
+        <!--   空闲连接被回收时间，回收空闲连接至minIdle指定数量，单位毫秒   -->
+        <!--<property name="minEvictableIdleTimeMillis" value="1800000"/>-->
+        <!--   检查空闲连接是否可被回收，如果小于等于0，不会启动检查线程，默认-1，单位毫秒   -->
+        <!--<property name="timeBetweenEvictionRunsMillis" value="14200000"/>-->
+        <!--   在每次空闲连接回收器线程(如果有)运行时检查的连接数量   -->
+        <!--<property name="numTestsPerEvictionRun" value="10"/>-->
+        <!--SQL查询,用来验证从连接池取出的连接-->
+        <!--<property name="validationQuery" value="select 1"/>-->
+        <!--&lt;!&ndash;   指明连接是否被空闲连接回收器(如果有)进行检验.如果检测失败,则连接将被从池中去除   &ndash;&gt;-->
+        <!--<property name="testWhileIdle" value="true"/>-->
+        <!--指明是否在从池中取出连接前进行检验,如果检验失败,-->
+        <!--则从池中去除连接并尝试取出另一个.-->
+        <!--注意: 设置为true后如果要生效,validationQuery参数必须设置为非空字符串-->
+        <!--<property name= "testOnBorrow" value="true" />-->
+        <!--指明是否在归还到池中前进行检验-->
+        <!--注意: 设置为true后如果要生效,validationQuery参数必须设置为非空字符串-->
+        <!--<property name= "testOnReturn" value="false" />-->
+
+        <!-- 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒 -->
+        <property name="timeBetweenEvictionRunsMillis" value="60000" />
+
+        <!-- 配置一个连接在池中最小生存的时间，单位是毫秒 -->
+        <property name="minEvictableIdleTimeMillis" value="300000" />
+
+        <property name="validationQuery" value="SELECT 'x'" />
+        <property name="testWhileIdle" value="true" />
+        <property name="testOnBorrow" value="false" />
+        <property name="testOnReturn" value="false" />
+
+        <property name="poolPreparedStatements" value="false" />
+
+        <!-- 配置监控统计拦截的filters -->
+        <property name="filters" value="stat" />
+    </bean>
+    <bean id="popCrmDataSource3" class="com.alibaba.druid.pool.DruidDataSource">
+        <property name="driverClassName" value="${pop-crm.crm.jdbc.driver3}"/>
+        <property name="url" value="${pop-crm.crm.jdbc.url3}"/>
+        <property name="username" value="${pop-crm.crm.jdbc.username3}"/>
+        <property name="password" value="${pop-crm.crm.jdbc.password3}"/>
+        <!--initialSize: 初始化连接-->
+        <property name="initialSize" value="10"/>
+        <!--maxIdle: 最大空闲连接-->
+        <!--<property name="maxIdle" value="5"/>-->
+        <!--minIdle: 最小空闲连接-->
+        <property name="minIdle" value="3"/>
+        <!--maxActive: 最大连接数量-->
+        <property name="maxActive" value="20"/>
+        <!--removeAbandoned: 是否自动回收超时连接-->
+        <property name="removeAbandoned" value="true"/>
+        <!--removeAbandonedTimeout: 超时时间(以秒数为单位)-->
+        <property name="removeAbandonedTimeout" value="300"/>
+        <!--maxWait: 超时等待时间以毫秒为单位 6000毫秒/1000等于60秒-->
+        <property name="maxWait" value="-1"/>
+
+        <!--   空闲连接被回收时间，回收空闲连接至minIdle指定数量，单位毫秒   -->
+        <!--<property name="minEvictableIdleTimeMillis" value="1800000"/>-->
+        <!--   检查空闲连接是否可被回收，如果小于等于0，不会启动检查线程，默认-1，单位毫秒   -->
+        <!--<property name="timeBetweenEvictionRunsMillis" value="14200000"/>-->
+        <!--   在每次空闲连接回收器线程(如果有)运行时检查的连接数量   -->
+        <!--<property name="numTestsPerEvictionRun" value="10"/>-->
+        <!--SQL查询,用来验证从连接池取出的连接-->
+        <!--<property name="validationQuery" value="select 1"/>-->
+        <!--&lt;!&ndash;   指明连接是否被空闲连接回收器(如果有)进行检验.如果检测失败,则连接将被从池中去除   &ndash;&gt;-->
+        <!--<property name="testWhileIdle" value="true"/>-->
+        <!--指明是否在从池中取出连接前进行检验,如果检验失败,-->
+        <!--则从池中去除连接并尝试取出另一个.-->
+        <!--注意: 设置为true后如果要生效,validationQuery参数必须设置为非空字符串-->
+        <!--<property name= "testOnBorrow" value="true" />-->
+        <!--指明是否在归还到池中前进行检验-->
+        <!--注意: 设置为true后如果要生效,validationQuery参数必须设置为非空字符串-->
+        <!--<property name= "testOnReturn" value="false" />-->
+
+        <!-- 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒 -->
+        <property name="timeBetweenEvictionRunsMillis" value="60000" />
+
+        <!-- 配置一个连接在池中最小生存的时间，单位是毫秒 -->
+        <property name="minEvictableIdleTimeMillis" value="300000" />
+
+        <property name="validationQuery" value="SELECT 'x'" />
+        <property name="testWhileIdle" value="true" />
+        <property name="testOnBorrow" value="false" />
+        <property name="testOnReturn" value="false" />
+
+        <property name="poolPreparedStatements" value="false" />
+
+        <!-- 配置监控统计拦截的filters -->
+        <property name="filters" value="stat" />
+    </bean>
+
+</beans>

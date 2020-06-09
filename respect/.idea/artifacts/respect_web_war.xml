@@ -1,0 +1,14 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="respect-web:war">
+    <output-path>$PROJECT_DIR$/respect-web/target</output-path>
+    <properties id="maven-jee-properties">
+      <options>
+        <module>respect-web</module>
+        <packaging>war</packaging>
+      </options>
+    </properties>
+    <root id="archive" name="respect-web.war">
+      <element id="artifact" artifact-name="respect-web:war exploded" />
+    </root>
+  </artifact>
+</component>

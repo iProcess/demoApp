@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/iprocess.iml" filepath="$PROJECT_DIR$/iprocess.iml" />
+      <module fileurl="file://$PROJECT_DIR$/iprocess-api/iprocess-api.iml" filepath="$PROJECT_DIR$/iprocess-api/iprocess-api.iml" />
+      <module fileurl="file://$PROJECT_DIR$/iprocess-client/iprocess-client.iml" filepath="$PROJECT_DIR$/iprocess-client/iprocess-client.iml" />
+      <module fileurl="file://$PROJECT_DIR$/iprocess-dao/iprocess-dao.iml" filepath="$PROJECT_DIR$/iprocess-dao/iprocess-dao.iml" />
+      <module fileurl="file://$PROJECT_DIR$/iprocess-domain/iprocess-domain.iml" filepath="$PROJECT_DIR$/iprocess-domain/iprocess-domain.iml" />
+      <module fileurl="file://$PROJECT_DIR$/iprocess-route/iprocess-route.iml" filepath="$PROJECT_DIR$/iprocess-route/iprocess-route.iml" />
+      <module fileurl="file://$PROJECT_DIR$/iprocess-rpc/iprocess-rpc.iml" filepath="$PROJECT_DIR$/iprocess-rpc/iprocess-rpc.iml" />
+      <module fileurl="file://$PROJECT_DIR$/iprocess-service/iprocess-service.iml" filepath="$PROJECT_DIR$/iprocess-service/iprocess-service.iml" />
+      <module fileurl="file://$PROJECT_DIR$/iprocess-soa/iprocess-soa.iml" filepath="$PROJECT_DIR$/iprocess-soa/iprocess-soa.iml" />
+    </modules>
+  </component>
+</project>

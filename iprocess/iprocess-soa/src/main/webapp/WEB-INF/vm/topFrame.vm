@@ -1,0 +1,82 @@
+#* @vtlvariable name="loginContext" type="com.jd.pop.vender.web.context.VenderLoginContext" *#
+#set($layout="empty.vm")
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=gb2312"/>
+    <title>京东商城：商家后台</title>
+    <link rel="stylesheet" type="text/css" href="$!assetModule.getTarget("/shop/2013/skin/nav.css")" media="all"/>
+    <script type="text/javascript" src="$!assetModule.getTarget("/shop/js/jquery-1.4.2.min.js")"></script>
+    <script type="text/javascript" src="$!assetModule.getTarget("/shop/js/pop.base.js")"></script>
+</head>
+
+<body class="page-header">
+<div id="header">
+
+##    <div id="sys-infor">
+##        <span>您好!<span class="user" id="J_LoginContextPin">$!loginContext.pin
+##            id="J_LoginContextCompanyName"
+##            style="display:none">$!stringEscapeUtils.escapeHtml($!loginContext.companyName)</span>
+##        <a href="/logout.action" target="_top" class="login">[退出]</a>
+##        <a href="http://gw.jos.360buy.com/">商家助手</a>
+##    </div>
+
+
+    <div id="sys-infor">
+        <span>欢迎您：$!loginContext.pin</span>
+        <a href="/logout.action">[退出]</a>
+        <a href="http://gw.jos.360buy.com/">商家助手</a>
+    </div>
+
+    <ul id="sys-links">
+        <li><a target="_blank" href="//pop.jd.com/userLoginAction.action"><i class="i-odp"></i><span>数据罗盘</span></a></li>
+        <li><a target="_blank" href="//kuaiche.jd.com/"><i class="i-express"></i><span>京东快车</span></a></li>
+        <li><a target="_blank" href="http://mjbbs.jd.com/forum.php"><i class="i-forum"></i><span>卖家论坛</span></a></li>
+    </ul>
+    <div id="logo"><a title="京东商家后台" href="#">京东商家后台</a></div>
+    <div id="nav">
+        <ul>
+##            <li><a href="#"><span>首页</span></a></li>
+##            <li><a href="#"><span>我的店铺</span></a></li>
+##            <li><a href="#"><span>商品管理</span></a></li>
+##            <li><a href="#"><span>促销推广</span></a></li>
+##            <li><a href="#"><span>订单管理</span></a></li>
+##            <li><a href="#"><span>我的配送</span></a></li>
+##            <li><a href="#"><span>售后服务</span></a></li>
+##            <li><a href="#"><span>结算管理</span></a></li>
+##            <li><a href="#"><span>我的报表</span></a></li>
+            <li class="curr"><a href="leftFrame.action?module=14" target="leftFrame"><span>会员管理</span></a></li>
+##            <li><a href="#"><span>增值服务</span></a></li>
+##            <li><a href="#"><span>仓储管理</span></a></li>
+##            <li><a href="#"><span>网站地图</span></a></li>
+        </ul>
+    </div>
+</div>
+<script type="text/javascript">
+    (function () {
+        $("#nav a").bind("click", function () {
+            $("#nav .curr").removeClass("curr");
+            var index = $("#nav a").index(this);
+            $("#nav li").eq(index).addClass("curr");
+        })
+    })();
+    //设置登录信息的回调接口
+    function _SetLoginContext(pin, name) {
+        function get(id) {
+            return document.getElementById(id);
+        }
+
+        if (get("J_LoginContextPin").innerHTML != pin) {
+            get("J_LoginContextPin").innerHTML = pin;
+        }
+        if (get("J_LoginContextCompanyName").innerHTML != name) {
+            get("J_LoginContextCompanyName").innerHTML = name;
+        }
+    }
+</script>
+<!--[if gte IE 6]>
+<script type="text/javascript">jQuery.widthForIE6({min: 1003, padding: 0});</script>
+<![endif]-->
+</body>
+</html>

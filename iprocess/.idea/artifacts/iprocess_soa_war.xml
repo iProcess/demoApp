@@ -1,0 +1,14 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="iprocess-soa:war">
+    <output-path>$PROJECT_DIR$/iprocess-soa/target</output-path>
+    <properties id="maven-jee-properties">
+      <options>
+        <module>iprocess-soa</module>
+        <packaging>war</packaging>
+      </options>
+    </properties>
+    <root id="archive" name="iprocess-soa.war">
+      <element id="artifact" artifact-name="iprocess-soa:war exploded" />
+    </root>
+  </artifact>
+</component>

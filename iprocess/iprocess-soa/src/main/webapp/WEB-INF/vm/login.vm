@@ -1,0 +1,21 @@
+#* @vtlvariable name="returnUrl" type="java.lang.String" *#
+#* @vtlvariable name="loginUrl" type="java.lang.String" *#
+#* @vtlvariable name="pin" type="java.lang.String" *#
+#* @vtlvariable name="passwd" type="java.lang.String" *#
+#set($title="请登录")
+<h2>请登录。。</h2>
+
+<a href="$!{loginUrl}" target="_top">您还可以来这里登录</a> / <a href="/index.action">返回首页</a>
+
+#showSimpleError()
+<br /><br /><div style="font-size:14px;color:#FF0000">友情提醒：如果注册提交提示登陆 ,请使用 beiqiu waixmin 登陆 即可注册 表单数据不会丢.</div>
+<p>&nbsp;</p>
+<div style="margin-left:20px">
+    <form action="/doLogin.action" method="post">
+        <input type="hidden" name="returnUrl" value="$!{stringEscapeUtils.escapeHtml($!returnUrl)}"/>
+##        <input type="hidden" name="loginUrl" value="$!{stringEscapeUtils.escapeHtml($!loginUrl)}"/>
+        用户名：<input type="text" name="pin" value="$!stringEscapeUtils.escapeHtml($!pin)" /> #showSimpleFieldError("publicError") <br/>
+        密&nbsp;&nbsp;码：<input type="password" name="passwd" value="$!stringEscapeUtils.escapeHtml($!passwd)" /><br/> ###showSimpleFieldError("passwd")
+        <input type="submit" value="登陆"/>
+    </form>
+</div>

@@ -1,0 +1,29 @@
+#* @vtlvariable name="thirdNavigate" type="java.util.List<java.lang.String>" *#
+#* @vtlvariable name="title" type="java.lang.String" *#
+#* @vtlvariable name="tableIndex" type="java.lang.Integer" *#
+##<div class="shop_main">
+##		 <p class="curr_position">您当前所在位置：<a href="javascript:gotoPosi('$popVenderModule.getTarget("/leftFrame.action")', 1);" onclick="modifyJdMenuIndex(0,0,1);">商家后台管理</a>&nbsp;&gt;&nbsp;
+##            <a href="javascript:gotoPosi('$popVenderModule.getTarget("/leftFrame.action")', '$!tableIndex');">#if($!tableIndex==14)会员关系管理#elseif($!tableIndex==13)服务管理#{else}其它#end</a>
+##            #if($thirdNavigate && $thirdNavigate.size() ==2)
+##                &nbsp;&gt;&nbsp; <a href="${thirdNavigate.get(0)}">${thirdNavigate.get(1)}</a>
+##            #end
+##            #if($!{title})&nbsp;&gt;&nbsp;$!{title}#end</p>
+##</div>
+<script type="text/javascript">
+function modifyJdMenuIndex(x1,x2,x3){
+    var y=window.parent.topFrame.document.getElementById("nav").getElementsByTagName("li"),x3=x3||0;
+    for (var i=y.length-1;i>-1;i--){
+        y[i].className=(x1==i)?"curr":"";
+    }
+}
+function gotoPosi(module, tableIndex, module2, pt) {
+    var url = module + "?module=" + tableIndex;
+    if(typeof(module2) != 'undefined'){
+        url = url + "&module2=" + module2;
+    }
+    if(typeof(pt) != 'undefined'){
+        url = url + "&pt=" + pt;
+    }
+    window.location = "$popVenderModule.getTarget("/proxy.html")?leftUrl=" + encodeURIComponent(url) + "&tableIndex=" + tableIndex;
+}
+</script>

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="iprocess-api" />
+        <module name="iprocess-client" />
+        <module name="iprocess-dao" />
+        <module name="iprocess-domain" />
+        <module name="iprocess-route" />
+        <module name="iprocess-rpc" />
+        <module name="iprocess-service" />
+        <module name="iprocess-soa" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="iprocess" target="1.7" />
+      <module name="iprocess-api" target="1.7" />
+      <module name="iprocess-client" target="1.6" />
+      <module name="iprocess-dao" target="1.7" />
+      <module name="iprocess-domain" target="1.6" />
+      <module name="iprocess-route" target="1.7" />
+      <module name="iprocess-rpc" target="1.7" />
+      <module name="iprocess-service" target="1.7" />
+      <module name="iprocess-soa" target="1.7" />
+    </bytecodeTargetLevel>
+  </component>
+</project>

@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>com.respect</groupId>
+        <artifactId>iprocess</artifactId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>iprocess-soa</artifactId>
+    <name>iprocess-soa</name>
+    <packaging>war</packaging>
+    <version>1.0-SNAPSHOT</version>
+
+    <!--<dependencies>-->
+
+        <!--<dependency>-->
+            <!--<groupId>com.respect</groupId>-->
+            <!--<artifactId>iprocess-api</artifactId>-->
+            <!--<version>1.0-SNAPSHOT</version>-->
+        <!--</dependency>-->
+
+    <!--</dependencies>-->
+
+    <build>
+        <finalName>iprocess-soa</finalName>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
+        <plugins>
+            <plugin>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.3</version>
+                <configuration>
+                    <source>1.7</source>
+                    <target>1.7</target>
+                    <encoding>utf-8</encoding>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-war-plugin</artifactId>
+                <version>2.4</version>
+                <configuration>
+                    <archiveClasses>true</archiveClasses>
+                    <webResources>
+                        <resource>
+                            <directory>src/main/webapp/WEB-INF</directory>
+                            <filtering>true</filtering>
+                            <targetPath>WEB-INF</targetPath>
+                        </resource>
+                    </webResources>
+                    <archive>
+                        <manifest>
+                            <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+                        </manifest>
+                        <manifestEntries>
+                            <Implementation-Build>${buildNumber}</Implementation-Build>
+                            <Timestamp>${timestamp}</Timestamp>
+                        </manifestEntries>
+                    </archive>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+    <profiles>
+        <profile>
+            <id>development</id>
+            <properties>
+
+                <!--数据库连接的方式-->
+                <pop-crm.jdbc.datasource.type>dbcp</pop-crm.jdbc.datasource.type>
+
+                <!--pop crm 数据库连接配置 MySQL库-->
+                <pop-crm.crm.jdbc.driver>com.mysql.jdbc.Driver</pop-crm.crm.jdbc.driver>
+                <pop-crm.crm.jdbc.url>jdbc:mysql://192.168.101.245:3306/pop_crm</pop-crm.crm.jdbc.url>
+                <pop-crm.crm.jdbc.username>pop_crm_rw</pop-crm.crm.jdbc.username>
+                <pop-crm.crm.jdbc.password>pop_crm_rw3ed</pop-crm.crm.jdbc.password>
+                <!--pop crm 数据库连接配置 MySQL库1-->
+                <pop-crm.crm.jdbc.driver1>com.mysql.jdbc.Driver</pop-crm.crm.jdbc.driver1>
+                <pop-crm.crm.jdbc.url1>jdbc:mysql://192.168.101.245:3306/pop_crm1</pop-crm.crm.jdbc.url1>
+                <pop-crm.crm.jdbc.username1>pop_crm_rw</pop-crm.crm.jdbc.username1>
+                <pop-crm.crm.jdbc.password1>pop_crm_rw3ed</pop-crm.crm.jdbc.password1>
+                <!--pop crm 数据库连接配置 MySQL库2-->
+                <pop-crm.crm.jdbc.driver2>com.mysql.jdbc.Driver</pop-crm.crm.jdbc.driver2>
+                <pop-crm.crm.jdbc.url2>jdbc:mysql://192.168.101.245:3306/pop_crm2</pop-crm.crm.jdbc.url2>
+                <pop-crm.crm.jdbc.username2>pop_crm_rw</pop-crm.crm.jdbc.username2>
+                <pop-crm.crm.jdbc.password2>pop_crm_rw3ed</pop-crm.crm.jdbc.password2>
+                <!--pop crm 数据库连接配置 MySQL库3-->
+                <pop-crm.crm.jdbc.driver3>com.mysql.jdbc.Driver</pop-crm.crm.jdbc.driver3>
+                <pop-crm.crm.jdbc.url3>jdbc:mysql://192.168.101.245:3306/pop_crm3</pop-crm.crm.jdbc.url3>
+                <pop-crm.crm.jdbc.username3>pop_crm_rw</pop-crm.crm.jdbc.username3>
+                <pop-crm.crm.jdbc.password3>pop_crm_rw3ed</pop-crm.crm.jdbc.password3>
+
+            </properties>
+        </profile>
+
+        <profile>
+            <id>yf</id>
+            <properties>
+
+                <!--数据库连接的方式-->
+                <pop-crm.jdbc.datasource.type>dbcp</pop-crm.jdbc.datasource.type>
+
+                <!--pop crm 数据库连接配置 MySQL库-->
+                <pop-crm.crm.jdbc.driver>com.mysql.jdbc.Driver</pop-crm.crm.jdbc.driver>
+                <pop-crm.crm.jdbc.url>jdbc:mysql://192.168.101.245:3306/pop_crm</pop-crm.crm.jdbc.url>
+                <pop-crm.crm.jdbc.username>pop_crm_rw</pop-crm.crm.jdbc.username>
+                <pop-crm.crm.jdbc.password>pop_crm_rw3ed</pop-crm.crm.jdbc.password>
+                <!--pop crm 数据库连接配置 MySQL库1-->
+                <pop-crm.crm.jdbc.driver1>com.mysql.jdbc.Driver</pop-crm.crm.jdbc.driver1>
+                <pop-crm.crm.jdbc.url1>jdbc:mysql://192.168.101.245:3306/pop_crm1</pop-crm.crm.jdbc.url1>
+                <pop-crm.crm.jdbc.username1>pop_crm_rw</pop-crm.crm.jdbc.username1>
+                <pop-crm.crm.jdbc.password1>pop_crm_rw3ed</pop-crm.crm.jdbc.password1>
+                <!--pop crm 数据库连接配置 MySQL库2-->
+                <pop-crm.crm.jdbc.driver2>com.mysql.jdbc.Driver</pop-crm.crm.jdbc.driver2>
+                <pop-crm.crm.jdbc.url2>jdbc:mysql://192.168.101.245:3306/pop_crm2</pop-crm.crm.jdbc.url2>
+                <pop-crm.crm.jdbc.username2>pop_crm_rw</pop-crm.crm.jdbc.username2>
+                <pop-crm.crm.jdbc.password2>pop_crm_rw3ed</pop-crm.crm.jdbc.password2>
+                <!--pop crm 数据库连接配置 MySQL库3-->
+                <pop-crm.crm.jdbc.driver3>com.mysql.jdbc.Driver</pop-crm.crm.jdbc.driver3>
+                <pop-crm.crm.jdbc.url3>jdbc:mysql://192.168.101.245:3306/pop_crm3</pop-crm.crm.jdbc.url3>
+                <pop-crm.crm.jdbc.username3>pop_crm_rw</pop-crm.crm.jdbc.username3>
+                <pop-crm.crm.jdbc.password3>pop_crm_rw3ed</pop-crm.crm.jdbc.password3>
+
+            </properties>
+        </profile>
+
+        <profile>
+            <id>production</id>
+            <properties>
+
+                <!--数据库连接的方式-->
+                <pop-crm.jdbc.datasource.type>dbcp</pop-crm.jdbc.datasource.type>
+
+                <!--pop crm 数据库连接配置 MySQL库-->
+                <pop-crm.crm.jdbc.driver>com.mysql.jdbc.Driver</pop-crm.crm.jdbc.driver>
+                <pop-crm.crm.jdbc.url>jdbc:mysql://192.168.101.245:3306/pop_crm</pop-crm.crm.jdbc.url>
+                <pop-crm.crm.jdbc.username>pop_crm_rw</pop-crm.crm.jdbc.username>
+                <pop-crm.crm.jdbc.password>pop_crm_rw3ed</pop-crm.crm.jdbc.password>
+                <!--pop crm 数据库连接配置 MySQL库1-->
+                <pop-crm.crm.jdbc.driver1>com.mysql.jdbc.Driver</pop-crm.crm.jdbc.driver1>
+                <pop-crm.crm.jdbc.url1>jdbc:mysql://192.168.101.245:3306/pop_crm1</pop-crm.crm.jdbc.url1>
+                <pop-crm.crm.jdbc.username1>pop_crm_rw</pop-crm.crm.jdbc.username1>
+                <pop-crm.crm.jdbc.password1>pop_crm_rw3ed</pop-crm.crm.jdbc.password1>
+                <!--pop crm 数据库连接配置 MySQL库2-->
+                <pop-crm.crm.jdbc.driver2>com.mysql.jdbc.Driver</pop-crm.crm.jdbc.driver2>
+                <pop-crm.crm.jdbc.url2>jdbc:mysql://192.168.101.245:3306/pop_crm2</pop-crm.crm.jdbc.url2>
+                <pop-crm.crm.jdbc.username2>pop_crm_rw</pop-crm.crm.jdbc.username2>
+                <pop-crm.crm.jdbc.password2>pop_crm_rw3ed</pop-crm.crm.jdbc.password2>
+                <!--pop crm 数据库连接配置 MySQL库3-->
+                <pop-crm.crm.jdbc.driver3>com.mysql.jdbc.Driver</pop-crm.crm.jdbc.driver3>
+                <pop-crm.crm.jdbc.url3>jdbc:mysql://192.168.101.245:3306/pop_crm3</pop-crm.crm.jdbc.url3>
+                <pop-crm.crm.jdbc.username3>pop_crm_rw</pop-crm.crm.jdbc.username3>
+                <pop-crm.crm.jdbc.password3>pop_crm_rw3ed</pop-crm.crm.jdbc.password3>
+
+            </properties>
+        </profile>
+    </profiles>
+
+</project>

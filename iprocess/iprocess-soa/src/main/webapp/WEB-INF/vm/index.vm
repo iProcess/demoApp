@@ -1,0 +1,19 @@
+#set($layout="empty.vm")
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Frameset//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-frameset.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=gb2312"/>
+    <title>商家SOA端 - 京东商城</title>
+
+</head>
+
+    <body>
+		Hello！Welcome to JCRM SOA！<br />
+		<span style="display:block;color:white;">机器名：$!localHost.machineName</span>
+
+        <a  href="$!homeModule.getTarget("/saf_toInterfaceTest.action")">SAF接口测试</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <a  href="$!homeModule.getTarget("/jsf_jsfTest.action")">JSF接口测试</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <a  href="$!homeModule.getTarget("/test_testDataIndex.action")">Test Data>></a>
+    </body>
+
+</html>

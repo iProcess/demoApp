@@ -1,0 +1,11 @@
+<script type="text/javascript">
+	var backinfo;
+	#if(!$!actionMessages.empty)
+		backinfo= '#foreach($str in $actionMessages)$!str#break#end';
+	#end
+	#if(!$!actionErrors.empty)
+		backinfo= '#foreach($str in $actionErrors)$!str#break#end';
+	#end
+	alert(backinfo);
+	window.location='$!redirectUrl';
+</script>

@@ -1,0 +1,163 @@
+#* @vtlvariable name="exception" type="java.lang.Exception" *#
+##$exception.message
+<style type="text/css">
+    .m_404 {
+        margin: 60px auto;
+        width: 650px;
+    }
+
+    .m_404 a {
+        text-decoration: none
+    }
+
+    .error {
+        background: url($assetModule.getTarget("/shop/skin/i/404_03.gif")) no-repeat 0 0;
+        padding-left: 78px;
+    }
+
+    .error h3 {
+        font-size: 24px;
+        line-height: 60px;
+        color: #606060;
+        margin-bottom: 30px
+    }
+
+    .error p {
+        padding-left: 120px;
+        margin-bottom: 75px
+    }
+
+    .btn-link {
+        overflow: hidden;
+        zoom: 1;
+        padding-left: 65px;
+        margin-bottom: 30px
+    }
+
+    .btn-link a {
+        display: inline-block;
+        height: 33px;
+        margin-right: 30px;
+        padding: 0 13px 0 10px;
+        line-height: 33px;
+        font-size: 12px;
+        color: #f4f7ff;
+        background: url($assetModule.getTarget("/shop/skin/i/bg_btn.png")) 0 0 repeat-x;
+        text-decoration: none;
+        font-weight: bold
+    }
+
+    .m_404 h4 {
+        font-size: 14px
+    }
+
+    li a {
+        display: inline-block;
+        height: 33px;
+        margin-right: 30px;
+        padding: 0 13px 0 10px;
+        line-height: 33px;
+        font-size: 12px;
+        color: #f4f7ff;
+        background: url($assetModule.getTarget("/shop/skin/i/bg_btn.png")) 0 0 repeat-x;
+        text-decoration: none;
+        font-weight: bold
+    }
+
+    .m_404 ul {
+        padding-left: 15px
+    }
+
+    .m_404 ul li {
+        float: left;
+        width: 33.3%;
+        padding-top: 25px
+    }
+</style>
+<script language="javascript" type="text/javascript">
+    function modifyJdMenu(x1, x2, x3) {
+        var y = window.parent.topFrame.document.getElementById("nav").getElementsByTagName("li"), x3 = x3 || 0;
+        for (var i = y.length - 1; i > -1; i--) {
+            y[i].className = (x1 == i + 1) ? "curr" : "";
+        }
+        window.parent.leftFrame.location = "/leftFrame.action?module=" + x1 + "&module2=" + x2 + "&n=" + x3;
+    }
+    var i = 5;
+    var intervalid;
+    intervalid = setInterval("fun()", 1000);
+    function fun() {
+        if (i == 0) {
+            //window.location.href = "/home.action";
+            gotoPosi('$popVenderModule.getTarget("/leftFrame.action")', 1);
+            clearInterval(intervalid);
+        }
+        document.getElementById("mes").innerHTML = i;
+        i--;
+    }
+
+
+    function gotoPosi(module, tableIndex) {
+        var url = module + "?module=" + tableIndex;
+        window.location = "$popVenderModule.getTarget("/proxy.html")?leftUrl=" + encodeURIComponent(url) + "&tableIndex=" + tableIndex;
+    }
+</script>
+
+<div class="m_404">
+    <div class="error">
+        <h3>
+            #if($exception)
+                #if($!exception.class.simpleName=="NoSuchMethodException")
+                    $!response.setStatus(404)
+                    404! 您请求的内容不存在
+                #elseif($!exception.message)
+                    出错了：  $!exception.message
+                #else
+                    出错了系统错误！
+                #end
+            #else
+                #showSimpleError()
+            #end
+        </h3>
+
+        <div class="btn-link">
+            <a href="javascript:gotoPosi('$popVenderModule.getTarget("/leftFrame.action")', 1);">返回商家后台首页</a>
+            <a href="javascript:history.go(-1)">返回上一页</a>
+        </div>
+        <p><span class="ftx04" id="mes">5</span>&nbsp秒钟后自动返回到商家后台首页
+        </p>
+    </div>
+
+    <h4>您可以通过下面的按钮快速使用常用功能：</h4>
+    <ul>
+        <li><a href="$popVenderWareModule.getTarget("/ware/publish/ware_navigation.action")"
+               onclick="modifyJdMenu(3,0,1)">发布新商品</a></li>
+        <li><a href="$promoVenModule.getTarget("/promotion/addEvent.action")" onclick="modifyJdMenu(4,0,1)">发起商品促销</a>
+        </li>
+
+        #if($!webHelper.isSop()==true)
+            <li><a href="$popVenderOrderModule.getTarget("/order/orderSop_waitShipList.action")"
+                   onclick="modifyJdMenu(5,0,1)">订单发货管理</a></li>
+        #end
+
+        #if($!webHelper.isFbp()==true)
+            <li><a href="$popVenderOrderModule.getTarget("/order/orderFbp_waitShipList.action")"
+                   onclick="modifyJdMenu(5,0,1)">订单发货管理</a></li>
+        #end
+
+        #if($!webHelper.isLbp()==true)
+            <li><a href="$popVenderOrderModule.getTarget("/order/orderLbp_toJdPsCenter.action")"
+                   onclick="modifyJdMenu(5,0,1)">订单发货管理</a></li>
+        #end
+
+        #if($!webHelper.isFbp()==true)
+            <li><a href="$popVenderOrderModule.getTarget("/vender/stock/stockAction_list.action")"
+                   onclick="modifyJdMenu(6,2,1)">查看商品库存</a></li>
+        #end
+
+        <li><a href="$popVenderOrderModule.getTarget("/after/afterAction_sendList.action")"
+               onclick="modifyJdMenu(8,0,1)">处理售后订单</a></li>
+        <li><a href="$popVenderFinModule.getTarget("/financeFee/current_finishOrderList.action")"
+               onclick="modifyJdMenu(9,0,1)">查看本期应收账款</a></li>
+    </ul>
+</div>
+

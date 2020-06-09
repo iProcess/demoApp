@@ -1,0 +1,1410 @@
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=gb2312"/>
+    <title>商家SOA端 - 京东商城</title>
+    <script src="/jquery-1.10.2.min.js"></script>
+    <script type="text/javascript" src="/WdatePicker.js"></script>
+    <script>
+        var interfaceInfoArr = new Array();
+        interfaceInfoArr[0] = new Array("GradePromotionService.getGrade", "查询会员等级规则信息", "1")
+
+        interfaceInfoArr[1] = new Array("GradePromotionService.setGrade", "修改会员等级规则信息", "2");
+
+        interfaceInfoArr[2] = new Array("CrmMemberService.getMembers", "查询会员信息", "3");
+
+        interfaceInfoArr[3] = new Array("CrmMemberService.getMemberDynmModels", "获取动态查询模型列表", "4");
+
+        interfaceInfoArr[4] = new Array("CrmMemberService.addMemberDynmModel", "创建动态查询模型", "5");
+
+        interfaceInfoArr[5] = new Array("CrmMemberService.editMemberDynmModel", "修改动态查询模型", "6");
+
+        interfaceInfoArr[6] = new Array("CrmMemberService.delMemberDynmModel", "删除动态查询模型", "7");
+
+        interfaceInfoArr[7] = new Array("CrmMemberService.getMembersByModel", "根据动态查询模型获取会员列表", "8");
+
+        interfaceInfoArr[8] = new Array("PromotionCouponsService.addCoupon", "创建店铺优惠劵", "9");
+
+        interfaceInfoArr[9] = new Array("PromotionCouponsService.getCoupons", "查询店铺优惠券", "10");
+
+        interfaceInfoArr[10] = new Array("PromotionCouponsService.getCouponActivities", "查询优惠券发放活动", "11");
+
+        interfaceInfoArr[11] = new Array("PromotionCouponsService.cancelCouponActivity", "取消优惠劵活动", "12");
+
+        interfaceInfoArr[12] = new Array("CustomerModelSafService.queryCustomerModelList", "按条件查询会员模型列表", "13");
+
+        interfaceInfoArr[13] = new Array("CustomerModelSafService.queryAndCreateSystemModelList", "按条件查询会员模型列表，若无系统模型则生成", "14");
+
+        interfaceInfoArr[14] = new Array("CrmMemberService.getMembersByScan", "逐页查询会员信息", "15");
+
+       /* interfaceInfoArr[14] = new Array("HessianServerI.queryRulesOfShop", "根据商家ID获取会员等级规则", "15");
+
+        interfaceInfoArr[15] = new Array("HessianServerI.queryMarketingInfoNDays", "查询前N天完成的活动信息", "16");*/
+
+        var interfaceTabTrId = "";
+
+        jQuery(function(){
+            var interfaceTabObj = jQuery("#interfaceTab");
+            for(var i = 0;i < interfaceInfoArr.length; i++){
+                interfaceTabObj.append("<tr id='"+interfaceInfoArr[i][2]+"tr'><td>&nbsp;<input type='radio' name='interfacerdo' onclick='chooseInterface("+interfaceInfoArr[i][2]+");' />&nbsp;"+interfaceInfoArr[i][2]+"</td><td style='height: 25px;'>&nbsp;"+interfaceInfoArr[i][0]+"</td><td>&nbsp;"+interfaceInfoArr[i][1]+"</td></tr>").append("<tr style='display: none;'><td colspan='2' id='"+interfaceInfoArr[i][2]+"showResult'></td></tr>");
+            }
+            jQuery("#interfaceTab tr").mouseover(function(){
+                jQuery(this).css("background-color", "#FFFF37");
+            });
+            jQuery("#interfaceTab tr").mouseout(function(){
+                if(interfaceTabTrId != jQuery(this).attr("id")){
+                    jQuery(this).css("background-color", "");
+                }else{
+                    jQuery(this).css("background-color", "#FFFF37");
+                }
+            });
+        });
+
+        function showOrHideDivInfo(flag, interfaceId){
+            if(null == interfaceId || "" == interfaceId){
+                return;
+            }
+            if(flag == "0"){
+                var screenWidth = jQuery(window).width();//当前窗口宽度
+                var screenHeight = jQuery(window).height();//当前窗口高度
+                jQuery("#zhezhaoceng" + interfaceId).css({"display":"","position": "fixed","background": "#000","z-index": "1001","-moz-opacity": "0.9","opacity":".92","filter": "alpha(opacity=50)","width":screenWidth,"height":screenHeight,"overflow":"scroll"});
+                jQuery("#zhezhaoceng" + interfaceId + "Param").css("display", "");
+                jQuery("#zhezhaoceng" + interfaceId + "Succ").css("display", "none");
+                jQuery("#zhezhaoceng" + interfaceId + "Fail").css("display", "none");
+            }else {
+                jQuery("#zhezhaoceng" + interfaceId).css("display", "none");
+            }
+        }
+
+        function chooseInterface(interfaceId){
+            if(null == interfaceId || "" == interfaceId){
+                return;
+            }
+            if(null != interfaceInfoArr && interfaceInfoArr.length > 0){
+                for(var i = 0; i < interfaceInfoArr.length; i++){
+                    jQuery("#" + interfaceInfoArr[i][2] + "tr").css("background-color", "");
+                }
+            }
+            jQuery("#" + interfaceId + "tr").css("background-color", "#FFFF37");
+            showOrHideDivInfo("0", interfaceId);
+            interfaceTabTrId = interfaceId + "tr";
+        }
+
+        function colseDiv(interfaceId){
+            if(null == interfaceId || "" == interfaceId){
+                return;
+            }
+            showOrHideDivInfo("1", interfaceId);
+        }
+
+        function dataCommit(interfaceId){
+            if(null == interfaceId || "" == interfaceId){
+                return;
+            }
+            var isPositive = /^[0-9]*[1-9][0-9]*$/;
+            var isDouble = /^(([0-9]+.[0-9]*[1-9][0-9]*)|([0-9]*[1-9][0-9]*.[0-9]+)|([0-9]*[1-9][0-9]*))$/;
+            var reqUrl;
+            var reqData;
+            if(interfaceId == "1"){
+                var venderId1Obj = jQuery("#venderId1");
+                if(null == venderId1Obj.val() || "" == venderId1Obj.val() || !isPositive.test(venderId1Obj.val())){
+                    alert("venderId必须为全数字");
+                    venderId1Obj.select();
+                    venderId1Obj.focus();
+                    return;
+                }
+                reqUrl = "/saf_getGrade.action";
+                reqData = {"venderId": venderId1Obj.val()};
+            }else if(interfaceId == "2"){
+                var venderId2Obj = jQuery("#venderId2");
+                if(null == venderId2Obj.val() || "" == venderId2Obj.val() || !isPositive.test(venderId2Obj.val())){
+                    alert("venderId必须为全数字");
+                    venderId2Obj.select();
+                    venderId2Obj.focus();
+                    return;
+                }
+                var gradeTradeAmount = "";
+                var flag = 0;
+                jQuery("input[name='gradeTradeAmount']").each(function(){
+                    if(null == jQuery(this).val() || "" == jQuery(this).val() || !isPositive.test(jQuery(this).val())){
+                        alert("等级交易额不合法");
+                        jQuery(this).select();
+                        jQuery(this).focus();
+                        flag++;
+                        return false;
+                    }
+                    gradeTradeAmount += jQuery(this).val() + "|";
+                });
+                if(flag > 0){
+                    return;
+                }
+                var gradeTradeCount = "";
+                flag = 0;
+                jQuery("input[name='gradeTradeCount']").each(function(){
+                    if(null == jQuery(this).val() || "" == jQuery(this).val() || !isPositive.test(jQuery(this).val())){
+                        alert("等级交易笔数必须全为数字");
+                        jQuery(this).select();
+                        jQuery(this).focus();
+                        flag++;
+                        return false;
+                    }
+                    gradeTradeCount += jQuery(this).val() + "|";
+                });
+                if(flag > 0){
+                    return;
+                }
+                reqUrl = "/saf_setGrade.action";
+                reqData = {"venderId": venderId2Obj.val(), "gradeTradeAmount": gradeTradeAmount, "gradeTradeCount": gradeTradeCount};
+            }else if(interfaceId == "3"){
+                var venderId3Obj = jQuery("#venderId3");
+                if(null == venderId3Obj.val() || "" == venderId3Obj.val() || !isPositive.test(venderId3Obj.val())){
+                    alert("venderId必须为全数字");
+                    venderId3Obj.select();
+                    venderId3Obj.focus();
+                    return;
+                }
+                var avgPrice3Obj = jQuery("#avgPrice3");
+                if(jQuery.trim(avgPrice3Obj.val()) != ""){
+                    if(!isPositive.test(avgPrice3Obj.val())){
+                        alert("“平均客单价”不合法");
+                        avgPrice3Obj.select();
+                        avgPrice3Obj.focus();
+                        return;
+                    }
+                }
+                var minTradeCount3Obj = jQuery("#minTradeCount3");
+                if(jQuery.trim(minTradeCount3Obj.val()) != ""){
+                    if(!isPositive.test(minTradeCount3Obj.val())){
+                        alert("“交易笔数”必须为全数字");
+                        minTradeCount3Obj.select();
+                        minTradeCount3Obj.focus();
+                        return;
+                    }
+                }
+                var maxTradeCount3Obj = jQuery("#maxTradeCount3");
+                if(jQuery.trim(maxTradeCount3Obj.val()) != ""){
+                    if(!isPositive.test(maxTradeCount3Obj.val())){
+                        alert("“交易笔数”必须为全数字");
+                        maxTradeCount3Obj.select();
+                        maxTradeCount3Obj.focus();
+                        return;
+                    }
+                }
+                var minTradeAmount3Obj = jQuery("#minTradeAmount3");
+                if(jQuery.trim(minTradeAmount3Obj.val()) != ""){
+                    if(!isPositive.test(minTradeAmount3Obj.val())){
+                        alert("“交易金额”不合法");
+                        minTradeAmount3Obj.select();
+                        minTradeAmount3Obj.focus();
+                        return;
+                    }
+                }
+                var currentPage3Obj = jQuery("#currentPage3");
+                if(null == currentPage3Obj.val() || "" == currentPage3Obj.val() || !isPositive.test(currentPage3Obj.val())){
+                    alert("“当前页数”必须为全数字");
+                    currentPage3Obj.select();
+                    currentPage3Obj.focus();
+                    return;
+                }
+                var pageSize3Obj = jQuery("#pageSize3");
+                if(null == pageSize3Obj.val() || "" == pageSize3Obj.val() || !isPositive.test(pageSize3Obj.val())){
+                    alert("“每页显示条数”必须为全数字");
+                    pageSize3Obj.select();
+                    pageSize3Obj.focus();
+                    return;
+                }
+                reqUrl = "/saf_getMembers.action";
+                reqData = {"venderId": venderId3Obj.val(), "customerPin": jQuery("#customerPin3").val(), "levelAtShop": jQuery("#levelAtShop3").val(),
+                           "minLastTradeTime": jQuery("#minLastTradeTime3").val(), "maxLastTradeTime": jQuery("#maxLastTradeTime3").val(),
+                           "minTradeCount": minTradeCount3Obj.val(), "maxTradeCount": maxTradeCount3Obj.val(), "avgPrice": avgPrice3Obj.val(),
+                           "minTradeAmount": minTradeAmount3Obj.val(), "currentPage": currentPage3Obj.val(), "pageSize": pageSize3Obj.val()};
+            }else if(interfaceId == "4"){
+                var venderId4Obj = jQuery("#venderId4");
+                if(null == venderId4Obj.val() || "" == venderId4Obj.val() || !isPositive.test(venderId4Obj.val())){
+                    alert("venderId必须为全数字");
+                    venderId4Obj.select();
+                    venderId4Obj.focus();
+                    return;
+                }
+                reqUrl = "/saf_getMemberDynmModels.action";
+                reqData = {"venderId": venderId4Obj.val()};
+            }else if(interfaceId == "5"){
+                var venderId5Obj = jQuery("#venderId5");
+                if(null == venderId5Obj.val() || "" == venderId5Obj.val() || !isPositive.test(venderId5Obj.val())){
+                    alert("venderId必须为全数字");
+                    venderId5Obj.select();
+                    venderId5Obj.focus();
+                    return;
+                }
+                var modelName5Obj = jQuery("#modelName5");
+                if(null == modelName5Obj.val() || "" == modelName5Obj.val()){
+                    alert("“模型名称”不能为空");
+                    modelName5Obj.select();
+                    modelName5Obj.focus();
+                    return;
+                }
+                var avgPrice5Obj = jQuery("#avgPrice5");
+                if(jQuery.trim(avgPrice5Obj.val()) != ""){
+                    if(!isPositive.test(avgPrice5Obj.val())){
+                        alert("“平均客单价”不合法");
+                        avgPrice5Obj.select();
+                        avgPrice5Obj.focus();
+                        return;
+                    }
+                }
+                var minTradeCount5Obj = jQuery("#minTradeCount5");
+                if(jQuery.trim(minTradeCount5Obj.val()) != ""){
+                    if(!isPositive.test(minTradeCount5Obj.val())){
+                        alert("“交易笔数”必须为全数字");
+                        minTradeCount5Obj.select();
+                        minTradeCount5Obj.focus();
+                        return;
+                    }
+                }
+                var maxTradeCount5Obj = jQuery("#maxTradeCount5");
+                if(jQuery.trim(maxTradeCount5Obj.val()) != ""){
+                    if(!isPositive.test(maxTradeCount5Obj.val())){
+                        alert("“交易笔数”必须为全数字");
+                        maxTradeCount5Obj.select();
+                        maxTradeCount5Obj.focus();
+                        return;
+                    }
+                }
+                var minTradeAmount5Obj = jQuery("#minTradeAmount5");
+                if(jQuery.trim(minTradeAmount5Obj.val()) != ""){
+                    if(!isPositive.test(minTradeAmount5Obj.val())){
+                        alert("“交易金额”不合法");
+                        minTradeAmount5Obj.select();
+                        minTradeAmount5Obj.focus();
+                        return;
+                    }
+                }
+                reqUrl = "/saf_addMemberDynmModel.action";
+                reqData = {"venderId": venderId5Obj.val(), "modelName": modelName5Obj.val(), "levelAtShop": jQuery("#levelAtShop5").val(),
+                    "minLastTradeTime": jQuery("#minLastTradeTime5").val(), "maxLastTradeTime": jQuery("#maxLastTradeTime5").val(),
+                    "minTradeCount": minTradeCount5Obj.val(), "maxTradeCount": maxTradeCount5Obj.val(), "avgPrice": avgPrice5Obj.val(),
+                    "minTradeAmount": minTradeAmount5Obj.val()};
+            }else if(interfaceId == "6"){
+                var venderId6Obj = jQuery("#venderId6");
+                if(null == venderId6Obj.val() || "" == venderId6Obj.val() || !isPositive.test(venderId6Obj.val())){
+                    alert("venderId必须为全数字");
+                    venderId6Obj.select();
+                    venderId6Obj.focus();
+                    return;
+                }
+                var modelId6Obj = jQuery("#modelId6");
+                if(null == modelId6Obj.val() || "" == modelId6Obj.val() || !isPositive.test(modelId6Obj.val())){
+                    alert("“会员模型编号”必须为全数字");
+                    modelId6Obj.select();
+                    modelId6Obj.focus();
+                    return;
+                }
+                var modelName6Obj = jQuery("#modelName6");
+                if(null == modelName6Obj.val() || "" == modelName6Obj.val()){
+                    alert("“会员模型名称”不能为空");
+                    modelName6Obj.select();
+                    modelName6Obj.focus();
+                    return;
+                }
+                var minTradeCount6Obj = jQuery("#minTradeCount6");
+                if(jQuery.trim(minTradeCount6Obj.val()) != ""){
+                    if(!isPositive.test(minTradeCount6Obj.val())){
+                        alert("“交易笔数”必须为全数字");
+                        minTradeCount6Obj.select();
+                        minTradeCount6Obj.focus();
+                        return;
+                    }
+                }
+                var maxTradeCount6Obj = jQuery("#maxTradeCount6");
+                if(jQuery.trim(maxTradeCount6Obj.val()) != ""){
+                    if(!isPositive.test(maxTradeCount6Obj.val())){
+                        alert("“交易笔数”必须为全数字");
+                        maxTradeCount6Obj.select();
+                        maxTradeCount6Obj.focus();
+                        return;
+                    }
+                }
+                var avgPrice6Obj = jQuery("#avgPrice6");
+                if(jQuery.trim(avgPrice6Obj.val()) != ""){
+                    if(!isPositive.test(avgPrice6Obj.val())){
+                        alert("“平均客单价”不合法");
+                        avgPrice6Obj.select();
+                        avgPrice6Obj.focus();
+                        return;
+                    }
+                }
+                var minTradeAmount6Obj = jQuery("#minTradeAmount6");
+                if(jQuery.trim(minTradeAmount6Obj.val()) != ""){
+                    if(!isPositive.test(minTradeAmount6Obj.val())){
+                        alert("“交易金额”不合法");
+                        minTradeAmount6Obj.select();
+                        minTradeAmount6Obj.focus();
+                        return;
+                    }
+                }
+                reqUrl = "/saf_editMemberDynmModel.action";
+                reqData = {"venderId": venderId6Obj.val(), "modelId": modelId6Obj.val(), "modelName": modelName6Obj.val(),
+                    "levelAtShop": jQuery("#levelAtShop6").val(), "minLastTradeTime": jQuery("#minLastTradeTime6").val(),
+                    "maxLastTradeTime": jQuery("#maxLastTradeTime6").val(), "minTradeCount": minTradeCount6Obj.val(),
+                    "maxTradeCount": maxTradeCount6Obj.val(), "avgPrice": avgPrice6Obj.val(), "minTradeAmount": minTradeAmount6Obj.val()};
+            }else if(interfaceId == "7"){
+                var venderId7Obj = jQuery("#venderId7");
+                if(null == venderId7Obj.val() || "" == venderId7Obj.val() || !isPositive.test(venderId7Obj.val())){
+                    alert("venderId必须为全数字");
+                    venderId7Obj.select();
+                    venderId7Obj.focus();
+                    return;
+                }
+                var modelId7Obj = jQuery("#modelId7");
+                if(null == modelId7Obj.val() || "" == modelId7Obj.val() || !isPositive.test(modelId7Obj.val())){
+                    alert("“会员模型编号”必须为全数字");
+                    modelId7Obj.select();
+                    modelId7Obj.focus();
+                    return;
+                }
+                reqUrl = "/saf_delMemberDynmModel.action";
+                reqData = {"venderId": venderId7Obj.val(), "modelId": modelId7Obj.val()};
+            }else if(interfaceId == "8"){
+                var venderId8Obj = jQuery("#venderId8");
+                if(null == venderId8Obj.val() || "" == venderId8Obj.val() || !isPositive.test(venderId8Obj.val())){
+                    alert("venderId必须为全数字");
+                    venderId8Obj.select();
+                    venderId8Obj.focus();
+                    return;
+                }
+                var modelId8Obj = jQuery("#modelId8");
+                if(null == modelId8Obj.val() || "" == modelId8Obj.val() || !isPositive.test(modelId8Obj.val())){
+                    alert("“会员模型编号”必须为全数字");
+                    modelId8Obj.select();
+                    modelId8Obj.focus();
+                    return;
+                }
+                var currentPage8Obj = jQuery("#currentPage8");
+                if(null == currentPage8Obj.val() || "" == currentPage8Obj.val() || !isPositive.test(currentPage8Obj.val())){
+                    alert("“当前页数”必须为全数字");
+                    currentPage8Obj.select();
+                    currentPage8Obj.focus();
+                    return;
+                }
+                var pageSize8Obj = jQuery("#pageSize8");
+                if(null == pageSize8Obj.val() || "" == pageSize8Obj.val() || !isPositive.test(pageSize8Obj.val())){
+                    alert("“每页显示条数”必须为全数字");
+                    pageSize8Obj.select();
+                    pageSize8Obj.focus();
+                    return;
+                }
+                reqUrl = "/saf_getMembersByModel.action";
+                reqData = {"venderId": venderId8Obj.val(), "modelId": modelId8Obj.val(), "currentPage": currentPage8Obj.val(), "pageSize": pageSize8Obj.val()};
+            }else if(interfaceId == "9"){
+                var venderId9Obj = jQuery("#venderId9");
+                if(null == venderId9Obj.val() || "" == venderId9Obj.val() || !isPositive.test(venderId9Obj.val())){
+                    alert("venderId必须为全数字");
+                    venderId9Obj.select();
+                    venderId9Obj.focus();
+                    return;
+                }
+                var couponName9Obj = jQuery("#couponName9");
+                if(null == couponName9Obj.val() || "" == couponName9Obj.val()){
+                    alert("“优惠券名称”不能为空");
+                    couponName9Obj.select();
+                    couponName9Obj.focus();
+                    return;
+                }
+                var couponAmount9Obj = jQuery("#couponAmount9");
+                if(null == couponAmount9Obj.val() || "" == couponAmount9Obj.val() || !isPositive.test(couponAmount9Obj.val())){
+                    alert("“优惠券数量”必须为整数");
+                    couponAmount9Obj.select();
+                    couponAmount9Obj.focus();
+                    return;
+                }
+                var condition9Obj = jQuery("#condition9");
+                if(null == condition9Obj.val() || "" == condition9Obj.val() || !isPositive.test(condition9Obj.val())){
+                    alert("“消费满的金额”不合法");
+                    condition9Obj.select();
+                    condition9Obj.focus();
+                    return;
+                }
+                var denomination9Obj = jQuery("#denomination9");
+                if(null == denomination9Obj.val() || "" == denomination9Obj.val() || !(isPositive.test(denomination9Obj.val()) || isDouble.test(denomination9Obj.val()))){
+                    alert("“优惠券面值”不合法");
+                    denomination9Obj.select();
+                    denomination9Obj.focus();
+                    return;
+                }
+                var startTime9Obj = jQuery("#startTime9");
+                if(null == startTime9Obj.val() || "" == startTime9Obj.val()){
+                    alert("“优惠券生效日期”不能为空");
+                    startTime9Obj.select();
+                    startTime9Obj.focus();
+                    return;
+                }
+                var endTime9Obj = jQuery("#endTime9");
+                if(null == endTime9Obj.val() || "" == endTime9Obj.val()){
+                    alert("“优惠券结束日期”不能为空");
+                    endTime9Obj.select();
+                    endTime9Obj.focus();
+                    return;
+                }
+                reqUrl = "/saf_addCoupon.action";
+                reqData = {"venderId": venderId9Obj.val(), "couponName": couponName9Obj.val(), "couponAmount": couponAmount9Obj.val(),
+                           "condition": condition9Obj.val(), "denomination": denomination9Obj.val(),
+                           "startTime": startTime9Obj.val(), "endTime": endTime9Obj.val()};
+            }else if(interfaceId == "10"){
+                var venderId10Obj = jQuery("#venderId10");
+                if(null == venderId10Obj.val() || "" == venderId10Obj.val() || !isPositive.test(venderId10Obj.val())){
+                    alert("venderId必须为全数字");
+                    venderId10Obj.select();
+                    venderId10Obj.focus();
+                    return;
+                }
+                var couponId10Obj = jQuery("#couponId10");
+                if(jQuery.trim(couponId10Obj.val()) != ""){
+                    if(!isPositive.test(couponId10Obj.val())){
+                        alert("“优惠劵编号”必须为全数字");
+                        couponId10Obj.select();
+                        couponId10Obj.focus();
+                        return;
+                    }
+                }
+                var denomination10Obj = jQuery("#denomination10");
+                if(jQuery.trim(denomination10Obj.val()) != ""){
+                    if(!isPositive.test(denomination10Obj.val())){
+                        alert("“优惠券面值”不合法");
+                        denomination10Obj.select();
+                        denomination10Obj.focus();
+                        return;
+                    }
+                }
+                var currentPage10Obj = jQuery("#currentPage10");
+                if(null == currentPage10Obj.val() || "" == currentPage10Obj.val() || !isPositive.test(currentPage10Obj.val())){
+                    alert("“当前页数”必须为全数字");
+                    currentPage10Obj.select();
+                    currentPage10Obj.focus();
+                    return;
+                }
+                var pageSize10Obj = jQuery("#pageSize10");
+                if(null == pageSize10Obj.val() || "" == pageSize10Obj.val() || !isPositive.test(pageSize10Obj.val())){
+                    alert("“每页显示条数”必须为全数字");
+                    pageSize10Obj.select();
+                    pageSize10Obj.focus();
+                    return;
+                }
+                reqUrl = "/saf_getCoupons.action";
+                reqData = {"venderId": venderId10Obj.val(), "couponId": jQuery.trim(couponId10Obj.val()), "denomination": jQuery.trim(denomination10Obj.val()),
+                           "endTime": jQuery("#endTime10").val(), "currentPage": currentPage10Obj.val(), "pageSize": pageSize10Obj.val()};
+            }else if(interfaceId == "11"){
+                var venderId11Obj = jQuery("#venderId11");
+                if(null == venderId11Obj.val() || "" == venderId11Obj.val() || !isPositive.test(venderId11Obj.val())){
+                    alert("venderId必须为全数字");
+                    venderId11Obj.select();
+                    venderId11Obj.focus();
+                    return;
+                }
+                var couponId11Obj = jQuery("#couponId11");
+                if(jQuery.trim(couponId11Obj.val()) != ""){
+                    if(!isPositive.test(couponId11Obj.val())){
+                        alert("“优惠劵编号”必须为全数字");
+                        couponId11Obj.select();
+                        couponId11Obj.focus();
+                        return;
+                    }
+                }
+                var activityId11Obj = jQuery("#activityId11");
+                if(jQuery.trim(activityId11Obj.val()) != ""){
+                    if(!isPositive.test(activityId11Obj.val())){
+                        alert("“优惠劵发放活动ID”必须为全数字");
+                        activityId11Obj.select();
+                        activityId11Obj.focus();
+                        return;
+                    }
+                }
+                var currentPage11Obj = jQuery("#currentPage11");
+                if(null == currentPage11Obj.val() || "" == currentPage11Obj.val() || !isPositive.test(currentPage11Obj.val())){
+                    alert("“当前页数”必须为全数字");
+                    currentPage11Obj.select();
+                    currentPage11Obj.focus();
+                    return;
+                }
+                var pageSize11Obj = jQuery("#pageSize11");
+                if(null == pageSize11Obj.val() || "" == pageSize11Obj.val() || !isPositive.test(pageSize11Obj.val())){
+                    alert("“每页显示条数”必须为全数字");
+                    pageSize11Obj.select();
+                    pageSize11Obj.focus();
+                    return;
+                }
+                reqUrl = "/saf_getCouponActivities.action";
+                reqData = {"venderId": venderId11Obj.val(), "couponId": jQuery.trim(couponId11Obj.val()), "activityId": jQuery.trim(activityId11Obj.val()),
+                    "activityName": jQuery("#activityName11").val(), "ativityStatus": jQuery("#ativityStatus11").val(), "minSendTime": jQuery("#minSendTime11").val(),
+                    "maxSendTime": jQuery("#maxSendTime11").val(), "currentPage": currentPage11Obj.val(), "pageSize": pageSize11Obj.val()};
+            }else if(interfaceId == "12"){
+                var venderId12Obj = jQuery("#venderId12");
+                if(null == venderId12Obj.val() || "" == venderId12Obj.val() || !isPositive.test(venderId12Obj.val())){
+                    alert("venderId必须为全数字");
+                    venderId12Obj.select();
+                    venderId12Obj.focus();
+                    return;
+                }
+                var activityId12Obj = jQuery("#activityId12");
+                if(null == activityId12Obj.val() || "" == activityId12Obj.val() || !isPositive.test(activityId12Obj.val())){
+                    alert("“优惠券活动ID”必须为全数字");
+                    activityId12Obj.select();
+                    activityId12Obj.focus();
+                    return;
+                }
+                reqUrl = "/saf_cancelCouponActivity.action";
+                reqData = {"venderId": venderId12Obj.val(), "activityId": activityId12Obj.val()};
+            }else if(interfaceId == "13"){
+                var venderId13Obj = jQuery("#venderId13");
+                if(jQuery.trim(venderId13Obj.val()) != ""){
+                    if(!isPositive.test(venderId13Obj.val())){
+                        alert("venderId必须为全数字");
+                        venderId13Obj.select();
+                        venderId13Obj.focus();
+                        return;
+                    }
+                }
+                var modelId13Obj = jQuery("#modelId13");
+                if(jQuery.trim(modelId13Obj.val()) != ""){
+                    if(!isPositive.test(modelId13Obj.val())){
+                        alert("“会员模型编号”必须为全数字");
+                        modelId13Obj.select();
+                        modelId13Obj.focus();
+                        return;
+                    }
+                }
+                var maxCustomerCount13Obj = jQuery("#maxCustomerCount13");
+                if(jQuery.trim(maxCustomerCount13Obj.val()) != ""){
+                    if(!isPositive.test(maxCustomerCount13Obj.val())){
+                        alert("“最大会员数量”必须为全数字");
+                        maxCustomerCount13Obj.select();
+                        maxCustomerCount13Obj.focus();
+                        return;
+                    }
+                }
+                var currentPage13Obj = jQuery("#currentPage13");
+                if(jQuery.trim(currentPage13Obj.val()) != ""){
+                    if(!isPositive.test(currentPage13Obj.val())){
+                        alert("“当前页数”必须为全数字");
+                        currentPage13Obj.select();
+                        currentPage13Obj.focus();
+                        return;
+                    }
+                }
+                var pageSize13Obj = jQuery("#pageSize13");
+                if(jQuery.trim(pageSize13Obj.val()) != ""){
+                    if(!isPositive.test(pageSize13Obj.val())){
+                        alert("“每页显示条数”必须为全数字");
+                        pageSize13Obj.select();
+                        pageSize13Obj.focus();
+                        return;
+                    }
+                }
+                reqUrl = "/saf_queryCustomerModelList.action";
+                reqData = {"venderId": venderId13Obj.val(), "modelId": jQuery.trim(modelId13Obj.val()),
+                           "modelName": jQuery("#modelName13").val(), "maxCustomerCount": maxCustomerCount13Obj.val(),
+                           "currentPage": currentPage13Obj.val(), "pageSize": pageSize13Obj.val()};
+            }else if(interfaceId == "14"){
+                var venderId14Obj = jQuery("#venderId14");
+                if(null == venderId14Obj.val() || "" == venderId14Obj.val() || !isPositive.test(venderId14Obj.val())){
+                    alert("venderId必须为全数字");
+                    venderId14Obj.select();
+                    venderId14Obj.focus();
+                    return;
+                }
+                reqUrl = "/saf_queryAndCreateSystemModelList.action";
+                reqData = {"venderId": venderId14Obj.val(), "modelName": jQuery("#modelName14").val()};
+//            }else if(interfaceId == "15"){
+//                var venderId15Obj = jQuery("#venderId15");
+//                if(null == venderId15Obj.val() || "" == venderId15Obj.val() || !isPositive.test(venderId15Obj.val())){
+//                    alert("venderId必须为全数字");
+//                    venderId15Obj.select();
+//                    venderId15Obj.focus();
+//                    return;
+//                }
+//                reqUrl = "/saf_hsnQueryRulesOfShop.action";
+//                reqData = {"venderId": venderId15Obj.val()};
+//            }else if(interfaceId == "16"){
+//                var days16Obj = jQuery("#days16");
+//                if(null == days16Obj.val() || "" == days16Obj.val() || !isPositive.test(days16Obj.val())){
+//                    alert("“天数”必须为全数字");
+//                    days16Obj.select();
+//                    days16Obj.focus();
+//                    return;
+//                }
+//                reqUrl = "/saf_hsnQueryMarketingInfoNDays.action";
+//                reqData = {"days": days16Obj.val()};
+
+            } else if (interfaceId == "15") {
+                var scrollId15Obj = jQuery("#scrollId15");
+                if (scrollId15Obj.val() != null && !(scrollId15Obj.val().trim() == "")) {
+                    reqData = {
+                        "scrollId": scrollId15Obj.val()
+                    };
+                } else {
+                    var venderId15Obj = jQuery("#venderId15");
+                    if (null == venderId15Obj.val() || "" == venderId15Obj.val() || !isPositive.test(venderId15Obj.val())) {
+                        alert("venderId必须为全数字");
+                        venderId15Obj.select();
+                        venderId15Obj.focus();
+                        return;
+                    }
+                    var avgPrice15Obj = jQuery("#avgPrice15");
+                    if (jQuery.trim(avgPrice15Obj.val()) != "") {
+                        if (!isPositive.test(avgPrice15Obj.val())) {
+                            alert("“平均客单价”不合法");
+                            avgPrice15Obj.select();
+                            avgPrice15Obj.focus();
+                            return;
+                        }
+                    }
+                    var minTradeCount15Obj = jQuery("#minTradeCount15");
+                    if (jQuery.trim(minTradeCount15Obj.val()) != "") {
+                        if (!isPositive.test(minTradeCount15Obj.val())) {
+                            alert("“交易笔数”必须为全数字");
+                            minTradeCount15Obj.select();
+                            minTradeCount15Obj.focus();
+                            return;
+                        }
+                    }
+                    var maxTradeCount15Obj = jQuery("#maxTradeCount15");
+                    if (jQuery.trim(maxTradeCount15Obj.val()) != "") {
+                        if (!isPositive.test(maxTradeCount15Obj.val())) {
+                            alert("“交易笔数”必须为全数字");
+                            maxTradeCount15Obj.select();
+                            maxTradeCount15Obj.focus();
+                            return;
+                        }
+                    }
+                    var minTradeAmount15Obj = jQuery("#minTradeAmount15");
+                    if (jQuery.trim(minTradeAmount15Obj.val()) != "") {
+                        if (!isPositive.test(minTradeAmount15Obj.val())) {
+                            alert("“交易金额”不合法");
+                            minTradeAmount15Obj.select();
+                            minTradeAmount15Obj.focus();
+                            return;
+                        }
+                    }
+                    var pageSize15Obj = jQuery("#pageSize15");
+                    if (null == pageSize15Obj.val() || "" == pageSize15Obj.val() || !isPositive.test(pageSize15Obj.val())) {
+                        alert("“每页显示条数”必须为全数字");
+                        pageSize15Obj.select();
+                        pageSize15Obj.focus();
+                        return;
+                    }
+                    reqData = {
+                        "venderId": venderId15Obj.val(),
+                        "customerPin": jQuery("#customerPin15").val(),
+                        "levelAtShop": jQuery("#levelAtShop15").val(),
+                        "minLastTradeTime": jQuery("#minLastTradeTime15").val(),
+                        "maxLastTradeTime": jQuery("#maxLastTradeTime15").val(),
+                        "minTradeCount": minTradeCount15Obj.val(),
+                        "maxTradeCount": maxTradeCount15Obj.val(),
+                        "avgPrice": avgPrice15Obj.val(),
+                        "minTradeAmount": minTradeAmount15Obj.val(),
+                        "pageSize": pageSize15Obj.val()
+                    };
+                }
+                reqUrl = "/saf_getMembersByScan.action";
+
+            }else {
+                alert("选择的接口有误");
+                return;
+            }
+
+            jQuery.post(
+                    reqUrl,
+                    reqData,
+                    function(result){
+                        var res = jQuery.parseJSON(result);
+                        jQuery("#zhezhaoceng"+interfaceId+"Param").css("display", "none");
+                        if(res.code == "0"){
+                            jQuery("#zhezhaoceng"+interfaceId+"Succ tr").remove();
+                            var tableObj = jQuery("#zhezhaoceng"+interfaceId+"Succ");
+                            tableObj.css("display", "");
+                            var resDataArr = res.data;
+                            if(null != resDataArr && resDataArr.length > 0){
+                                var resData;
+                                var tabTitle = "";
+                                var tabContent = "";
+                                var colspanCnt = 0;
+                                for(var i = 0; i < resDataArr.length; i++){
+                                    resData = resDataArr[i];
+                                    tabContent += "<tr>";
+                                    for (var key in resData) {
+                                        colspanCnt++;
+                                        if(i == 0){
+                                            tabTitle += "<th>"+key+"</th>";
+                                        }
+                                        tabContent += "<td>"+resData[key]+"</td>";
+                                    }
+                                    tabContent += "</tr>";
+                                }
+                                var totalCount = "";
+                                if(null != res.count && "" != res.count){
+                                    totalCount = "<span><b>总记录数："+res.count+"</b></span>";
+                                }
+                                var scrollId = "";
+                                if(null != res.scrollId && "" != res.scrollId){
+                                    scrollId = "<span><b>scrollId："+res.scrollId+"</b></span>";
+                                }
+                                tableObj.append("<tr>"+tabTitle+"</tr>").append(tabContent).append("<tr><td align='center' colspan='"+colspanCnt+"'>"+totalCount + "&nbsp;&nbsp;" +scrollId+"&nbsp;&nbsp;&nbsp;<button style='width: 80px;' onclick='colseDiv("+interfaceId+");'>关  闭</button></td></tr>");
+                            }else {
+                                jQuery("#zhezhaoceng"+interfaceId+"Fail").css("display", "");
+                                jQuery("#zhezhaoceng"+interfaceId+"FailMsg").html("接口响应结果为空，请稍后重试！");
+                            }
+                        }else {
+                            jQuery("#zhezhaoceng"+interfaceId+"Fail").css("display", "");
+                            jQuery("#zhezhaoceng"+interfaceId+"FailMsg").html(res.data);
+                        }
+                    }
+            );
+        }
+    </script>
+</head>
+<body>
+    <!-- GradePromotionService.getGrade begin -->
+    <div style="display:none;" id="zhezhaoceng1">
+        <table style="margin-left: 500px; margin-top: 200px;" id="zhezhaoceng1Param">
+            <tr>
+                <th style="color: #FFFFFF; height: 60px; width: 200px;">商家编号(venderId)</th>
+                <td><input type="text" id="venderId1" /></td>
+            </tr>
+            <tr>
+                <td align="center"><button style="width: 80px;" onclick="dataCommit(1);">提  交</button></td>
+                <td align="center"><button style="width: 80px;" onclick="colseDiv(1);">关  闭</button></td>
+            </tr>
+        </table>
+        <table style="margin-left: 350px; margin-top: 200px; background-color: white;" border="1px;" id="zhezhaoceng1Succ"></table>
+        <table id="zhezhaoceng1Fail" style="background-color: white; color: red;">
+            <tr>
+                <td align="center" id="zhezhaoceng1FailMsg"></td>
+            </tr>
+            <tr>
+                <td align="center"><button style="width: 80px;" onclick="colseDiv(1);">关  闭</button></td>
+            </tr>
+        </table>
+    </div>
+    <!-- GradePromotionService.getGrade end -->
+
+    <!-- GradePromotionService.setGrade begin -->
+    <div style="display:none;" id="zhezhaoceng2">
+        <table style="margin-left: 280px; margin-top: 150px;" id="zhezhaoceng2Param">
+            <tr>
+                <th style="color: #FFFFFF; height: 60px; width: 200px;">商家编号(venderId)</th>
+                <td><input type="text" id="venderId2" /></td>
+                <th style="color: #FFFFFF; height: 60px; width: 200px;">&nbsp;</th>
+                <td>&nbsp;</td>
+            </tr>
+            <tr>
+                <th style="color: #FFFFFF; height: 60px; width: 200px;">等级交易额一</th>
+                <td><input type="text" name="gradeTradeAmount" /></td>
+                <th style="color: #FFFFFF; height: 60px; width: 200px;">等级交易额二</th>
+                <td><input type="text" name="gradeTradeAmount" /></td>
+            </tr>
+            <tr>
+                <th style="color: #FFFFFF; height: 60px; width: 200px;">等级交易额三</th>
+                <td><input type="text" name="gradeTradeAmount" /></td>
+                <th style="color: #FFFFFF; height: 60px; width: 200px;">等级交易额四</th>
+                <td><input type="text" name="gradeTradeAmount" /></td>
+            </tr>
+            <tr>
+                <th style="color: #FFFFFF; height: 60px; width: 200px;">等级交易笔数一</th>
+                <td><input type="text" maxlength="6" name="gradeTradeCount" /></td>
+                <th style="color: #FFFFFF; height: 60px; width: 200px;">等级交易笔数二</th>
+                <td><input type="text" maxlength="6" name="gradeTradeCount" /></td>
+            </tr>
+            <tr>
+                <th style="color: #FFFFFF; height: 60px; width: 200px;">等级交易笔数三</th>
+                <td><input type="text" maxlength="6" name="gradeTradeCount" /></td>
+                <th style="color: #FFFFFF; height: 60px; width: 200px;">等级交易笔数四</th>
+                <td><input type="text" maxlength="6" name="gradeTradeCount" /></td>
+            </tr>
+            <tr>
+                <td align="center" colspan="2"><button style="width: 80px;" onclick="dataCommit(2);">提  交</button></td>
+                <td align="center" colspan="2"><button style="width: 80px;" onclick="colseDiv(2);">关  闭</button></td>
+            </tr>
+        </table>
+        <table style="margin-left: 350px; margin-top: 200px; background-color: white;" border="1px;" id="zhezhaoceng2Succ"></table>
+        <table id="zhezhaoceng2Fail" style="background-color: white; color: red;">
+            <tr>
+                <td align="center" id="zhezhaoceng2FailMsg"></td>
+            </tr>
+            <tr>
+                <td align="center"><button style="width: 80px;" onclick="colseDiv(2);">关  闭</button></td>
+            </tr>
+        </table>
+    </div>
+    <!-- GradePromotionService.setGrade end -->
+
+    <!-- CrmMemberService.getMembers begin -->
+    <div style="display:none;" id="zhezhaoceng3">
+        <table style="margin-left: 280px; margin-top: 100px;" id="zhezhaoceng3Param">
+            <tr>
+                <th style="color: #FFFFFF; height: 60px; width: 200px;">商家编号(venderId)</th>
+                <td><input type="text" id="venderId3" /></td>
+                <th style="color: #FFFFFF; height: 60px; width: 200px;">会员PIN</th>
+                <td><input type="text" id="customerPin3" /></td>
+            </tr>
+            <tr>
+                <th style="color: #FFFFFF; height: 60px; width: 200px;">会员等级(取值：-1和1-5 多个用逗号分隔)</th>
+                <td><input type="text" id="levelAtShop3" style="width: 173px;" /></td>
+                <th style="color: #FFFFFF; height: 60px; width: 200px;">平均客单价(大于或等于)</th>
+                <td><input type="text" maxlength="11" id="avgPrice3" /></td>
+            </tr>
+            <tr>
+                <th style="color: #FFFFFF; height: 60px; width: 200px;">上次交易时间：起</th>
+                <td><input type="text" id="minLastTradeTime3" onClick="WdatePicker();" /></td>
+                <th style="color: #FFFFFF; height: 60px; width: 200px;">上次交易时间：止</th>
+                <td><input type="text" id="maxLastTradeTime3" onClick="WdatePicker();" /></td>
+            </tr>
+            <tr>
+                <th style="color: #FFFFFF; height: 60px; width: 200px;">交易笔数：起</th>
+                <td><input type="text" maxlength="8" id="minTradeCount3" /></td>
+                <th style="color: #FFFFFF; height: 60px; width: 200px;">交易笔数：止</th>
+                <td><input type="text" maxlength="8" id="maxTradeCount3" /></td>
+            </tr>
+            <tr>
+                <th style="color: #FFFFFF; height: 60px; width: 200px;">交易金额(大于或等于)</th>
+                <td><input type="text" maxlength="11" id="minTradeAmount3" /></td>
+                <th style="color: #FFFFFF; height: 60px; width: 200px;">当前页数(1-100)</th>
+                <td><input type="text" id="currentPage3" value="1" /></td>
+            </tr>
+            <tr>
+                <th style="color: #FFFFFF; height: 60px; width: 200px;">每页显示条数(1-100)</th>
+                <td><input type="text" id="pageSize3" value="10" /></td>
+                <th style="color: #FFFFFF; height: 60px; width: 200px;">&nbsp;</th>
+                <td>&nbsp;</td>
+            </tr>
+            <tr>
+                <td align="center" colspan="2"><button style="width: 80px;" onclick="dataCommit(3);">提  交</button></td>
+                <td align="center" colspan="2"><button style="width: 80px;" onclick="colseDiv(3);">关  闭</button></td>
+            </tr>
+        </table>
+        <table style="margin-left: 250px; margin-top: 150px; background-color: white;" border="1px;" id="zhezhaoceng3Succ"></table>
+        <table id="zhezhaoceng3Fail" style="background-color: white; color: red;">
+            <tr>
+                <td align="center" id="zhezhaoceng3FailMsg"></td>
+            </tr>
+            <tr>
+                <td align="center"><button style="width: 80px;" onclick="colseDiv(3);">关  闭</button></td>
+            </tr>
+        </table>
+    </div>
+    <!-- CrmMemberService.getMembers end -->
+
+    <!-- CrmMemberService.getMembersByScan begin -->
+    <div style="display:none;" id="zhezhaoceng15">
+        <table style="margin-left: 280px; margin-top: 100px;" id="zhezhaoceng15Param">
+            <tr>
+                <th style="color: #FFFFFF; height: 60px; width: 200px;">商家编号(venderId)</th>
+                <td><input type="text" id="venderId15" /></td>
+                <th style="color: #FFFFFF; height: 60px; width: 200px;">会员PIN</th>
+                <td><input type="text" id="customerPin15" /></td>
+            </tr>
+            <tr>
+                <th style="color: #FFFFFF; height: 60px; width: 200px;">会员等级(取值：-1和1-5 多个用逗号分隔)</th>
+                <td><input type="text" id="levelAtShop15" style="width: 173px;" /></td>
+                <th style="color: #FFFFFF; height: 60px; width: 200px;">平均客单价(大于或等于)</th>
+                <td><input type="text" maxlength="11" id="avgPrice15" /></td>
+            </tr>
+            <tr>
+                <th style="color: #FFFFFF; height: 60px; width: 200px;">上次交易时间：起</th>
+                <td><input type="text" id="minLastTradeTime15" onClick="WdatePicker();" /></td>
+                <th style="color: #FFFFFF; height: 60px; width: 200px;">上次交易时间：止</th>
+                <td><input type="text" id="maxLastTradeTime15" onClick="WdatePicker();" /></td>
+            </tr>
+            <tr>
+                <th style="color: #FFFFFF; height: 60px; width: 200px;">交易笔数：起</th>
+                <td><input type="text" maxlength="8" id="minTradeCount15" /></td>
+                <th style="color: #FFFFFF; height: 60px; width: 200px;">交易笔数：止</th>
+                <td><input type="text" maxlength="8" id="maxTradeCount15" /></td>
+            </tr>
+            <tr>
+                <th style="color: #FFFFFF; height: 60px; width: 200px;">交易金额(大于或等于)</th>
+                <td><input type="text" maxlength="11" id="minTradeAmount15" /></td>
+                <th style="color: #FFFFFF; height: 60px; width: 200px;">每页显示条数(1-1000)</th>
+                <td><input type="text" id="pageSize15" value="100" /></td>
+            </tr>
+            <tr>
+                <th style="color: #FFFFFF; height: 60px; width: 200px;">scrollId</th>
+                <td><input type="text" id="scrollId15" /></td>
+                <th style="color: #FFFFFF; height: 60px; width: 200px;">&nbsp;</th>
+                <td>&nbsp;</td>
+            </tr>
+            <tr>
+                <td align="center" colspan="2"><button style="width: 80px;" onclick="dataCommit(15);">提  交</button></td>
+                <td align="center" colspan="2"><button style="width: 80px;" onclick="colseDiv(15);">关  闭</button></td>
+            </tr>
+        </table>
+        <table style="margin-left: 250px; margin-top: 150px; background-color: white;" border="1px;" id="zhezhaoceng15Succ"></table>
+        <table id="zhezhaoceng15Fail" style="background-color: white; color: red;">
+            <tr>
+                <td align="center" id="zhezhaoceng15FailMsg"></td>
+            </tr>
+            <tr>
+                <td align="center"><button style="width: 80px;" onclick="colseDiv(15);">关  闭</button></td>
+            </tr>
+        </table>
+    </div>
+    <!-- CrmMemberService.getMembersByScan end -->
+
+    <!-- CrmMemberService.getMemberDynmModels begin -->
+    <div style="display:none;" id="zhezhaoceng4">
+        <table style="margin-left: 500px; margin-top: 200px;" id="zhezhaoceng4Param">
+            <tr>
+                <th style="color: #FFFFFF; height: 60px; width: 200px;">商家编号(venderId)</th>
+                <td><input type="text" id="venderId4" /></td>
+            </tr>
+            <tr>
+                <td align="center"><button style="width: 80px;" onclick="dataCommit(4);">提  交</button></td>
+                <td align="center"><button style="width: 80px;" onclick="colseDiv(4);">关  闭</button></td>
+            </tr>
+        </table>
+        <table style="margin-left: 40px; margin-top: 150px; background-color: white;" border="1px;" id="zhezhaoceng4Succ"></table>
+        <table id="zhezhaoceng4Fail" style="background-color: white; color: red;">
+            <tr>
+                <td align="center" id="zhezhaoceng4FailMsg"></td>
+            </tr>
+            <tr>
+                <td align="center"><button style="width: 80px;" onclick="colseDiv(4);">关  闭</button></td>
+            </tr>
+        </table>
+    </div>
+    <!-- CrmMemberService.getMemberDynmModels end -->
+
+    <!-- CrmMemberService.addMemberDynmModel begin -->
+    <div style="display:none;" id="zhezhaoceng5">
+        <table style="margin-left: 280px; margin-top: 100px;" id="zhezhaoceng5Param">
+            <tr>
+                <th style="color: #FFFFFF; height: 60px; width: 200px;">商家编号(venderId)</th>
+                <td><input type="text" id="venderId5" /></td>
+                <th style="color: #FFFFFF; height: 60px; width: 200px;">模型名称</th>
+                <td><input type="text" id="modelName5" /></td>
+            </tr>
+            <tr>
+                <th style="color: #FFFFFF; height: 60px; width: 200px;">会员等级(取值：-1和1-5 多个用逗号分隔)</th>
+                <td><input type="text" id="levelAtShop5" style="width: 173px;" /></td>
+                <th style="color: #FFFFFF; height: 60px; width: 200px;">平均客单价(大于或等于)</th>
+                <td><input type="text" maxlength="11" id="avgPrice5" /></td>
+            </tr>
+            <tr>
+                <th style="color: #FFFFFF; height: 60px; width: 200px;">上次交易时间：起</th>
+                <td><input type="text" id="minLastTradeTime5" onClick="WdatePicker();" /></td>
+                <th style="color: #FFFFFF; height: 60px; width: 200px;">上次交易时间：止</th>
+                <td><input type="text" id="maxLastTradeTime5" onClick="WdatePicker();" /></td>
+            </tr>
+            <tr>
+                <th style="color: #FFFFFF; height: 60px; width: 200px;">交易笔数：起</th>
+                <td><input type="text" maxlength="8" id="minTradeCount5" /></td>
+                <th style="color: #FFFFFF; height: 60px; width: 200px;">交易笔数：止</th>
+                <td><input type="text" maxlength="8" id="maxTradeCount5" /></td>
+            </tr>
+            <tr>
+                <th style="color: #FFFFFF; height: 60px; width: 200px;">交易金额(大于或等于)</th>
+                <td><input type="text" maxlength="11" id="minTradeAmount5" /></td>
+                <th style="color: #FFFFFF; height: 60px; width: 200px;">&nbsp;</th>
+                <td>&nbsp;</td>
+            </tr>
+            <tr>
+                <td align="center" colspan="2"><button style="width: 80px;" onclick="dataCommit(5);">提  交</button></td>
+                <td align="center" colspan="2"><button style="width: 80px;" onclick="colseDiv(5);">关  闭</button></td>
+            </tr>
+        </table>
+        <table style="margin-left: 40px; margin-top: 150px; background-color: white;" border="1px;" id="zhezhaoceng5Succ"></table>
+        <table id="zhezhaoceng5Fail" style="background-color: white; color: red;">
+            <tr>
+                <td align="center" id="zhezhaoceng5FailMsg"></td>
+            </tr>
+            <tr>
+                <td align="center"><button style="width: 80px;" onclick="colseDiv(5);">关  闭</button></td>
+            </tr>
+        </table>
+    </div>
+    <!-- CrmMemberService.addMemberDynmModel end -->
+
+    <!-- CrmMemberService.editMemberDynmModel begin -->
+    <div style="display:none;" id="zhezhaoceng6">
+        <table style="margin-left: 280px; margin-top: 100px;" id="zhezhaoceng6Param">
+            <tr>
+                <th style="color: #FFFFFF; height: 60px; width: 200px;">商家编号(venderId)</th>
+                <td><input type="text" id="venderId6" /></td>
+                <th style="color: #FFFFFF; height: 60px; width: 200px;">会员模型编号</th>
+                <td><input type="text" id="modelId6" /></td>
+            </tr>
+            <tr>
+                <th style="color: #FFFFFF; height: 60px; width: 200px;">模型名称</th>
+                <td><input type="text" id="modelName6" /></td>
+                <th style="color: #FFFFFF; height: 60px; width: 200px;">会员等级(取值：-1和1-5 多个用逗号分隔)</th>
+                <td><input type="text" id="levelAtShop6" style="width: 173px;" /></td>
+            </tr>
+            <tr>
+                <th style="color: #FFFFFF; height: 60px; width: 200px;">上次交易时间：起</th>
+                <td><input type="text" id="minLastTradeTime6" onClick="WdatePicker();" /></td>
+                <th style="color: #FFFFFF; height: 60px; width: 200px;">上次交易时间：止</th>
+                <td><input type="text" id="maxLastTradeTime6" onClick="WdatePicker();" /></td>
+            </tr>
+            <tr>
+                <th style="color: #FFFFFF; height: 60px; width: 200px;">交易笔数：起</th>
+                <td><input type="text" maxlength="8" id="minTradeCount6" /></td>
+                <th style="color: #FFFFFF; height: 60px; width: 200px;">交易笔数：止</th>
+                <td><input type="text" maxlength="8" id="maxTradeCount6" /></td>
+            </tr>
+            <tr>
+                <th style="color: #FFFFFF; height: 60px; width: 200px;">交易金额(大于或等于)</th>
+                <td><input type="text" maxlength="11" id="minTradeAmount6" /></td>
+                <th style="color: #FFFFFF; height: 60px; width: 200px;">平均客单价(大于或等于)</th>
+                <td><input type="text" maxlength="11" id="avgPrice6" /></td>
+            </tr>
+            <tr>
+                <td align="center" colspan="2"><button style="width: 80px;" onclick="dataCommit(6);">提  交</button></td>
+                <td align="center" colspan="2"><button style="width: 80px;" onclick="colseDiv(6);">关  闭</button></td>
+            </tr>
+        </table>
+        <table style="margin-left: 40px; margin-top: 150px; background-color: white;" border="1px;" id="zhezhaoceng6Succ"></table>
+        <table id="zhezhaoceng6Fail" style="background-color: white; color: red;">
+            <tr>
+                <td align="center" id="zhezhaoceng6FailMsg"></td>
+            </tr>
+            <tr>
+                <td align="center"><button style="width: 80px;" onclick="colseDiv(6);">关  闭</button></td>
+            </tr>
+        </table>
+    </div>
+    <!-- CrmMemberService.editMemberDynmModel end -->
+
+    <!-- CrmMemberService.delMemberDynmModel begin -->
+    <div style="display:none;" id="zhezhaoceng7">
+        <table style="margin-left: 250px; margin-top: 200px;" id="zhezhaoceng7Param">
+            <tr>
+                <th style="color: #FFFFFF; height: 60px; width: 200px;">商家编号(venderId)</th>
+                <td><input type="text" id="venderId7" /></td>
+                <th style="color: #FFFFFF; height: 60px; width: 200px;">会员模型编号</th>
+                <td><input type="text" id="modelId7" /></td>
+            </tr>
+            <tr>
+                <td align="center" colspan="2"><button style="width: 80px;" onclick="dataCommit(7);">提  交</button></td>
+                <td align="center" colspan="2"><button style="width: 80px;" onclick="colseDiv(7);">关  闭</button></td>
+            </tr>
+        </table>
+        <table style="margin-left: 40px; margin-top: 150px; background-color: white;" border="1px;" id="zhezhaoceng7Succ"></table>
+        <table id="zhezhaoceng7Fail" style="background-color: white; color: red;">
+            <tr>
+                <td align="center" id="zhezhaoceng7FailMsg"></td>
+            </tr>
+            <tr>
+                <td align="center"><button style="width: 80px;" onclick="colseDiv(7);">关  闭</button></td>
+            </tr>
+        </table>
+    </div>
+    <!-- CrmMemberService.delMemberDynmModel begin -->
+
+    <!-- CrmMemberService.getMembersByModel begin -->
+    <div style="display:none;" id="zhezhaoceng8">
+        <table style="margin-left: 250px; margin-top: 200px;" id="zhezhaoceng8Param">
+            <tr>
+                <th style="color: #FFFFFF; height: 60px; width: 200px;">商家编号(venderId)</th>
+                <td><input type="text" id="venderId8" /></td>
+                <th style="color: #FFFFFF; height: 60px; width: 200px;">会员模型编号</th>
+                <td><input type="text" id="modelId8" /></td>
+            </tr>
+            <tr>
+                <th style="color: #FFFFFF; height: 60px; width: 200px;">当前页数(1-5000)</th>
+                <td><input type="text" id="currentPage8" value="1" /></td>
+                <th style="color: #FFFFFF; height: 60px; width: 200px;">每页显示条数(1-100)</th>
+                <td><input type="text" id="pageSize8" value="10" /></td>
+            </tr>
+            <tr>
+                <td align="center" colspan="2"><button style="width: 80px;" onclick="dataCommit(8);">提  交</button></td>
+                <td align="center" colspan="2"><button style="width: 80px;" onclick="colseDiv(8);">关  闭</button></td>
+            </tr>
+        </table>
+        <table style="margin-left: 250px; margin-top: 150px; background-color: white;" border="1px;" id="zhezhaoceng8Succ"></table>
+        <table id="zhezhaoceng8Fail" style="background-color: white; color: red;">
+            <tr>
+                <td align="center" id="zhezhaoceng8FailMsg"></td>
+            </tr>
+            <tr>
+                <td align="center"><button style="width: 80px;" onclick="colseDiv(8);">关  闭</button></td>
+            </tr>
+        </table>
+    </div>
+    <!-- CrmMemberService.getMembersByModel end -->
+
+    <!-- PromotionCouponsService.addCoupon begin -->
+    <div style="display:none;" id="zhezhaoceng9">
+        <table style="margin-left: 280px; margin-top: 100px;" id="zhezhaoceng9Param">
+            <tr>
+                <th style="color: #FFFFFF; height: 60px; width: 200px;">商家编号(venderId)</th>
+                <td><input type="text" id="venderId9" /></td>
+                <th style="color: #FFFFFF; height: 60px; width: 200px;">优惠券名称</th>
+                <td><input type="text" id="couponName9" /></td>
+            </tr>
+            <tr>
+                <th style="color: #FFFFFF; height: 60px; width: 200px;">优惠券数量</th>
+                <td><input type="text" maxlength="7" id="couponAmount9" /></td>
+                <th style="color: #FFFFFF; height: 60px; width: 200px;">消费满的金额</th>
+                <td><input type="text" maxlength="5" id="condition9" /></td>
+            </tr>
+            <tr>
+                <th style="color: #FFFFFF; height: 60px; width: 200px;">优惠券生效日期</th>
+                <td><input type="text" id="startTime9" onClick="WdatePicker();" /></td>
+                <th style="color: #FFFFFF; height: 60px; width: 200px;">优惠券结束日期</th>
+                <td><input type="text" id="endTime9" onClick="WdatePicker();" /></td>
+            </tr>
+            <tr>
+                <th style="color: #FFFFFF; height: 60px; width: 200px;">优惠券面值</th>
+                <td><input type="text" maxlength="4" id="denomination9" /></td>
+                <th style="color: #FFFFFF; height: 60px; width: 200px;">&nbsp;</th>
+                <td>&nbsp;</td>
+            </tr>
+            <tr>
+                <td align="center" colspan="2"><button style="width: 80px;" onclick="dataCommit(9);">提  交</button></td>
+                <td align="center" colspan="2"><button style="width: 80px;" onclick="colseDiv(9);">关  闭</button></td>
+            </tr>
+        </table>
+        <table style="margin-left: 250px; margin-top: 150px; background-color: white;" border="1px;" id="zhezhaoceng9Succ"></table>
+        <table id="zhezhaoceng9Fail" style="background-color: white; color: red;">
+            <tr>
+                <td align="center" id="zhezhaoceng9FailMsg"></td>
+            </tr>
+            <tr>
+                <td align="center"><button style="width: 80px;" onclick="colseDiv(9);">关  闭</button></td>
+            </tr>
+        </table>
+    </div>
+    <!-- PromotionCouponsService.addCoupon end -->
+
+    <!-- PromotionCouponsService.getCoupons begin -->
+    <div style="display:none;" id="zhezhaoceng10">
+        <table style="margin-left: 280px; margin-top: 100px;" id="zhezhaoceng10Param">
+            <tr>
+                <th style="color: #FFFFFF; height: 60px; width: 200px;">商家编号(venderId)</th>
+                <td><input type="text" id="venderId10" /></td>
+                <th style="color: #FFFFFF; height: 60px; width: 200px;">优惠券编号</th>
+                <td><input type="text" id="couponId10" /></td>
+            </tr>
+            <tr>
+                <th style="color: #FFFFFF; height: 60px; width: 200px;">优惠券面值</th>
+                <td><input type="text" maxlength="4" id="denomination10" /></td>
+                <th style="color: #FFFFFF; height: 60px; width: 200px;">优惠券结束日期</th>
+                <td><input type="text" id="endTime10" onClick="WdatePicker();" /></td>
+            </tr>
+            <tr>
+                <th style="color: #FFFFFF; height: 60px; width: 200px;">当前页数(1-5000)</th>
+                <td><input type="text" id="currentPage10" value="1" /></td>
+                <th style="color: #FFFFFF; height: 60px; width: 200px;">每页显示条数(1-100)</th>
+                <td><input type="text" id="pageSize10" value="10" /></td>
+            </tr>
+            <tr>
+                <td align="center" colspan="2"><button style="width: 80px;" onclick="dataCommit(10);">提  交</button></td>
+                <td align="center" colspan="2"><button style="width: 80px;" onclick="colseDiv(10);">关  闭</button></td>
+            </tr>
+        </table>
+        <table style="margin-left: 150px; margin-top: 150px; background-color: white;" border="1px;" id="zhezhaoceng10Succ"></table>
+        <table id="zhezhaoceng10Fail" style="background-color: white; color: red;">
+            <tr>
+                <td align="center" id="zhezhaoceng10FailMsg"></td>
+            </tr>
+            <tr>
+                <td align="center"><button style="width: 80px;" onclick="colseDiv(10);">关  闭</button></td>
+            </tr>
+        </table>
+    </div>
+    <!-- PromotionCouponsService.getCoupons end -->
+
+    <!-- PromotionCouponsService.getCouponActivities begin -->
+    <div style="display:none;" id="zhezhaoceng11">
+        <table style="margin-left: 280px; margin-top: 100px;" id="zhezhaoceng11Param">
+            <tr>
+                <th style="color: #FFFFFF; height: 60px; width: 200px;">商家编号(venderId)</th>
+                <td><input type="text" id="venderId11" /></td>
+                <th style="color: #FFFFFF; height: 60px; width: 200px;">优惠券编号</th>
+                <td><input type="text" id="couponId11" /></td>
+            </tr>
+            <tr>
+                <th style="color: #FFFFFF; height: 60px; width: 200px;">优惠劵发放活动ID</th>
+                <td><input type="text" id="activityId11" /></td>
+                <th style="color: #FFFFFF; height: 60px; width: 200px;">活动名称关键字</th>
+                <td><input type="text" id="activityName11" /></td>
+            </tr>
+            <tr>
+                <th style="color: #FFFFFF; height: 60px; width: 200px;">起始发放日期</th>
+                <td><input type="text" id="minSendTime11" onClick="WdatePicker();" /></td>
+                <th style="color: #FFFFFF; height: 60px; width: 200px;">结束发放日期</th>
+                <td><input type="text" id="maxSendTime11" onClick="WdatePicker();" /></td>
+            </tr>
+            <tr>
+                <th style="color: #FFFFFF; height: 60px; width: 200px;">当前页数(1-5000)</th>
+                <td><input type="text" id="currentPage11" value="1" /></td>
+                <th style="color: #FFFFFF; height: 60px; width: 200px;">每页显示条数(1-100)</th>
+                <td><input type="text" id="pageSize11" value="10" /></td>
+            </tr>
+            <tr>
+                <th style="color: #FFFFFF; height: 60px; width: 200px;">活动状态</th>
+                <td><select style="width: 173px;" id="ativityStatus11"><option value=""></option><option value="5">待发劵</option><option value="16">删除中</option><option value="7">统计完成</option><option value="13">已删除</option><option value="17">删除失败</option></select></td>
+                <th style="color: #FFFFFF; height: 60px; width: 200px;">&nbsp;</th>
+                <td>&nbsp;</td>
+            </tr>
+            <tr>
+                <td align="center" colspan="2"><button style="width: 80px;" onclick="dataCommit(11);">提  交</button></td>
+                <td align="center" colspan="2"><button style="width: 80px;" onclick="colseDiv(11);">关  闭</button></td>
+            </tr>
+        </table>
+        <table style="margin-left: 100px; margin-top: 150px; background-color: white;" border="1px;" id="zhezhaoceng11Succ"></table>
+        <table id="zhezhaoceng11Fail" style="background-color: white; color: red;">
+            <tr>
+                <td align="center" id="zhezhaoceng11FailMsg"></td>
+            </tr>
+            <tr>
+                <td align="center"><button style="width: 80px;" onclick="colseDiv(11);">关  闭</button></td>
+            </tr>
+        </table>
+    </div>
+    <!-- PromotionCouponsService.getCouponActivities end -->
+
+    <!-- PromotionCouponsService.cancelCouponActivity begin -->
+    <div style="display:none;" id="zhezhaoceng12">
+        <table style="margin-left: 250px; margin-top: 200px;" id="zhezhaoceng12Param">
+            <tr>
+                <th style="color: #FFFFFF; height: 60px; width: 200px;">商家编号(venderId)</th>
+                <td><input type="text" id="venderId12" /></td>
+                <th style="color: #FFFFFF; height: 60px; width: 200px;">优惠券活动ID</th>
+                <td><input type="text" id="activityId12" /></td>
+            </tr>
+            <tr>
+                <td align="center" colspan="2"><button style="width: 80px;" onclick="dataCommit(12);">提  交</button></td>
+                <td align="center" colspan="2"><button style="width: 80px;" onclick="colseDiv(12);">关  闭</button></td>
+            </tr>
+        </table>
+        <table style="margin-left: 100px; margin-top: 200px; background-color: white;" border="1px;" id="zhezhaoceng12Succ"></table>
+        <table id="zhezhaoceng12Fail" style="background-color: white; color: red;">
+            <tr>
+                <td align="center" id="zhezhaoceng12FailMsg"></td>
+            </tr>
+            <tr>
+                <td align="center"><button style="width: 80px;" onclick="colseDiv(12);">关  闭</button></td>
+            </tr>
+        </table>
+    </div>
+    <!-- PromotionCouponsService.cancelCouponActivity end -->
+
+    <!-- CustomerModelSafService.queryCustomerModelList begin -->
+    <div style="display:none;" id="zhezhaoceng13">
+        <table style="margin-left: 250px; margin-top: 200px;" id="zhezhaoceng13Param">
+            <tr>
+                <th style="color: #FFFFFF; height: 60px; width: 200px;">商家编号(venderId)</th>
+                <td><input type="text" id="venderId13" /></td>
+                <th style="color: #FFFFFF; height: 60px; width: 200px;">会员模型编号</th>
+                <td><input type="text" id="modelId13" /></td>
+            </tr>
+            <tr>
+                <th style="color: #FFFFFF; height: 60px; width: 200px;">会员模型名称</th>
+                <td><input type="text" id="modelName13" /></td>
+                <th style="color: #FFFFFF; height: 60px; width: 200px;">最大会员数量(大于或等于)</th>
+                <td><input type="text" id="maxCustomerCount13" /></td>
+            </tr>
+            <tr>
+                <th style="color: #FFFFFF; height: 60px; width: 200px;">当前页数</th>
+                <td><input type="text" id="currentPage13" value="1" /></td>
+                <th style="color: #FFFFFF; height: 60px; width: 200px;">每页显示条数(1-1000)</th>
+                <td><input type="text" id="pageSize13" value="10" /></td>
+            </tr>
+            <tr>
+                <td align="center" colspan="2"><button style="width: 80px;" onclick="dataCommit(13);">提  交</button></td>
+                <td align="center" colspan="2"><button style="width: 80px;" onclick="colseDiv(13);">关  闭</button></td>
+            </tr>
+        </table>
+        <table style="background-color: white;" border="1px;" id="zhezhaoceng13Succ"></table>
+        <table id="zhezhaoceng13Fail" style="background-color: white; color: red;">
+            <tr>
+                <td align="center" id="zhezhaoceng13FailMsg"></td>
+            </tr>
+            <tr>
+                <td align="center"><button style="width: 80px;" onclick="colseDiv(13);">关  闭</button></td>
+            </tr>
+        </table>
+    </div>
+    <!-- CustomerModelSafService.queryCustomerModelList end -->
+
+    <!-- CustomerModelSafService.queryAndCreateSystemModelList begin -->
+    <div style="display:none;" id="zhezhaoceng14">
+        <table style="margin-left: 250px; margin-top: 200px;" id="zhezhaoceng14Param">
+            <tr>
+                <th style="color: #FFFFFF; height: 60px; width: 200px;">商家编号(venderId)</th>
+                <td><input type="text" id="venderId14" /></td>
+                <th style="color: #FFFFFF; height: 60px; width: 200px;">会员模型名称</th>
+                <td><input type="text" id="modelName14" /></td>
+            </tr>
+            <tr>
+                <td align="center" colspan="2"><button style="width: 80px;" onclick="dataCommit(14);">提  交</button></td>
+                <td align="center" colspan="2"><button style="width: 80px;" onclick="colseDiv(14);">关  闭</button></td>
+            </tr>
+        </table>
+        <table style="background-color: white;" border="1px;" id="zhezhaoceng14Succ"></table>
+        <table id="zhezhaoceng14Fail" style="background-color: white; color: red;">
+            <tr>
+                <td align="center" id="zhezhaoceng14FailMsg"></td>
+            </tr>
+            <tr>
+                <td align="center"><button style="width: 80px;" onclick="colseDiv(14);">关  闭</button></td>
+            </tr>
+        </table>
+    </div>
+    <!-- CustomerModelSafService.queryAndCreateSystemModelList end -->
+
+    <!-- HessianServerI.queryRulesOfShop begin -->
+##    <div style="display:none;" id="zhezhaoceng15">
+##        <table style="margin-left: 500px; margin-top: 200px;" id="zhezhaoceng15Param">
+##            <tr>
+##                <th style="color: #FFFFFF; height: 60px; width: 200px;">商家编号(venderId)</th>
+##                <td><input type="text" id="venderId15" /></td>
+##            </tr>
+##            <tr>
+##                <td align="center"><button style="width: 80px;" onclick="dataCommit(15);">提  交</button></td>
+##                <td align="center"><button style="width: 80px;" onclick="colseDiv(15);">关  闭</button></td>
+##            </tr>
+##        </table>
+##        <table style="margin-left: 350px; margin-top: 200px; background-color: white;" border="1px;" id="zhezhaoceng15Succ"></table>
+##        <table id="zhezhaoceng15Fail" style="background-color: white; color: red;">
+##            <tr>
+##                <td align="center" id="zhezhaoceng15FailMsg"></td>
+##            </tr>
+##            <tr>
+##                <td align="center"><button style="width: 80px;" onclick="colseDiv(15);">关  闭</button></td>
+##            </tr>
+##        </table>
+##    </div>
+    <!-- HessianServerI.queryRulesOfShop end -->
+
+    <!-- HessianServerI.queryMarketingInfoNDays begin -->
+##    <div style="display:none;" id="zhezhaoceng16">
+##        <table style="margin-left: 500px; margin-top: 200px;" id="zhezhaoceng16Param">
+##            <tr>
+##                <th style="color: #FFFFFF; height: 60px; width: 200px;">天数</th>
+##                <td><input type="text" id="days16" /></td>
+##            </tr>
+##            <tr>
+##                <td align="center"><button style="width: 80px;" onclick="dataCommit(16);">提  交</button></td>
+##                <td align="center"><button style="width: 80px;" onclick="colseDiv(16);">关  闭</button></td>
+##            </tr>
+##        </table>
+##        <table style="margin-left: 350px; margin-top: 200px; background-color: white;" border="1px;" id="zhezhaoceng16Succ"></table>
+##        <table id="zhezhaoceng16Fail" style="background-color: white; color: red;">
+##            <tr>
+##                <td align="center" id="zhezhaoceng16FailMsg"></td>
+##            </tr>
+##            <tr>
+##                <td align="center"><button style="width: 80px;" onclick="colseDiv(16);">关  闭</button></td>
+##            </tr>
+##        </table>
+##    </div>
+    <!-- HessianServerI.queryMarketingInfoNDays end -->
+    <br /><br />
+    <table align="center" border="1px" id="interfaceTab" width="80%">
+        <tr>
+            <th style="height: 30px;">接口编号</th>
+            <th>接口名称</th>
+            <th>接口描述</th>
+        </tr>
+    </table>
+</body>
+</html>
