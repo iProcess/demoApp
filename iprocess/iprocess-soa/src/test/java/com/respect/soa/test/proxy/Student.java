@@ -24,4 +24,5 @@ public class Student implements Person {
     public void say(String word) {
         System.out.println("老师:" + word);
     }
+
 }
