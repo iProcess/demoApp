@@ -17,11 +17,7 @@
 
     <dependencies>
 
-        <!--<dependency>-->
-            <!--<groupId>com.jd.pop.crm</groupId>-->
-            <!--<artifactId>pop-crm-domain</artifactId>-->
-            <!--<version>${projectVersion}</version>-->
-        <!--</dependency>-->
+
 
     </dependencies>
 
@@ -106,7 +102,7 @@
                             <repositoryId>jd-snapshots</repositoryId>
                             <url>http://artifactory.360buy-develop.com/libs-snapshots-local</url>
                             <generatePom>false</generatePom>
-                            <file>target/pop-crm-client-${version}.jar</file>
+                            <file>target/flink-iprocess-client-${version}.jar</file>
                             <pomFile>target/modified-pom-replacePomPlaceholder/modified-pom/pom.xml</pomFile>
                         </configuration>
                     </execution>

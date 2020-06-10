@@ -1,5 +1,0 @@
-#* @vtlvariable name="error" type="java.lang.String" *#
-#* @vtlvariable name="exception" type="java.lang.Exception" *#
-#set($title=$!error)
-#set($homePage = $!homeModule.getTarget("/home.html"))
-$!error <b>更换一个账户</b>

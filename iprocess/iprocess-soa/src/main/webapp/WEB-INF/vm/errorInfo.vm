@@ -1,6 +1,0 @@
-<#list filedErrors?keys as field>
-    <li>${field}:${fieldErrors}</li>
-</#list>
-#sdebug()
-#sfilederrors("fieldName=")
-

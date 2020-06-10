@@ -118,7 +118,7 @@
                             <repositoryId>jd-snapshots</repositoryId>
                             <url>http://artifactory.360buy-develop.com/libs-snapshots-local</url>
                             <generatePom>false</generatePom>
-                            <file>target/pop-crm-domain-${version}.jar</file>
+                            <file>target/flink-iprocess-domain-${version}.jar</file>
                             <pomFile>target/modified-pom-replacePomPlaceholder/modified-pom/pom.xml</pomFile>
                         </configuration>
                     </execution>

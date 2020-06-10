@@ -1,8 +1,0 @@
- #parse("/WEB-INF/vm/common/reg_head.vm")
-$screen_content
- #parse("/WEB-INF/vm/common/reg_bottom.vm")
- ## ·ÀÖ¹cookie¹ýÆÚ
-  <img src="$!passportModule.getTarget("/new/hello.aspx")" width="0" height="0"/>
- 
- </body>
-</html>
