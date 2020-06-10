@@ -11,7 +11,7 @@
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="respect-parents" target="1.5" />
+      <module name="respect" target="1.5" />
       <module name="respect-service" target="1.5" />
       <module name="respect-web" target="1.5" />
     </bytecodeTargetLevel>
