@@ -78,26 +78,12 @@
                 <!--数据库连接的方式-->
                 <pop-crm.jdbc.datasource.type>dbcp</pop-crm.jdbc.datasource.type>
 
-                <!--pop crm 数据库连接配置 MySQL库-->
+                <!--数据库连接配置 MySQL库-->
                 <pop-crm.crm.jdbc.driver>com.mysql.jdbc.Driver</pop-crm.crm.jdbc.driver>
-                <pop-crm.crm.jdbc.url>jdbc:mysql://192.168.101.245:3306/pop_crm</pop-crm.crm.jdbc.url>
-                <pop-crm.crm.jdbc.username>pop_crm_rw</pop-crm.crm.jdbc.username>
-                <pop-crm.crm.jdbc.password>pop_crm_rw3ed</pop-crm.crm.jdbc.password>
-                <!--pop crm 数据库连接配置 MySQL库1-->
-                <pop-crm.crm.jdbc.driver1>com.mysql.jdbc.Driver</pop-crm.crm.jdbc.driver1>
-                <pop-crm.crm.jdbc.url1>jdbc:mysql://192.168.101.245:3306/pop_crm1</pop-crm.crm.jdbc.url1>
-                <pop-crm.crm.jdbc.username1>pop_crm_rw</pop-crm.crm.jdbc.username1>
-                <pop-crm.crm.jdbc.password1>pop_crm_rw3ed</pop-crm.crm.jdbc.password1>
-                <!--pop crm 数据库连接配置 MySQL库2-->
-                <pop-crm.crm.jdbc.driver2>com.mysql.jdbc.Driver</pop-crm.crm.jdbc.driver2>
-                <pop-crm.crm.jdbc.url2>jdbc:mysql://192.168.101.245:3306/pop_crm2</pop-crm.crm.jdbc.url2>
-                <pop-crm.crm.jdbc.username2>pop_crm_rw</pop-crm.crm.jdbc.username2>
-                <pop-crm.crm.jdbc.password2>pop_crm_rw3ed</pop-crm.crm.jdbc.password2>
-                <!--pop crm 数据库连接配置 MySQL库3-->
-                <pop-crm.crm.jdbc.driver3>com.mysql.jdbc.Driver</pop-crm.crm.jdbc.driver3>
-                <pop-crm.crm.jdbc.url3>jdbc:mysql://192.168.101.245:3306/pop_crm3</pop-crm.crm.jdbc.url3>
-                <pop-crm.crm.jdbc.username3>pop_crm_rw</pop-crm.crm.jdbc.username3>
-                <pop-crm.crm.jdbc.password3>pop_crm_rw3ed</pop-crm.crm.jdbc.password3>
+                <pop-crm.crm.jdbc.url>jdbc:mysql://127.0.0.1:3306/iProcess</pop-crm.crm.jdbc.url>
+                <pop-crm.crm.jdbc.username>root</pop-crm.crm.jdbc.username>
+                <pop-crm.crm.jdbc.password>root</pop-crm.crm.jdbc.password>
+
 
             </properties>
         </profile>
@@ -109,26 +95,11 @@
                 <!--数据库连接的方式-->
                 <pop-crm.jdbc.datasource.type>dbcp</pop-crm.jdbc.datasource.type>
 
-                <!--pop crm 数据库连接配置 MySQL库-->
+                <!--数据库连接配置 MySQL库-->
                 <pop-crm.crm.jdbc.driver>com.mysql.jdbc.Driver</pop-crm.crm.jdbc.driver>
-                <pop-crm.crm.jdbc.url>jdbc:mysql://192.168.101.245:3306/pop_crm</pop-crm.crm.jdbc.url>
-                <pop-crm.crm.jdbc.username>pop_crm_rw</pop-crm.crm.jdbc.username>
-                <pop-crm.crm.jdbc.password>pop_crm_rw3ed</pop-crm.crm.jdbc.password>
-                <!--pop crm 数据库连接配置 MySQL库1-->
-                <pop-crm.crm.jdbc.driver1>com.mysql.jdbc.Driver</pop-crm.crm.jdbc.driver1>
-                <pop-crm.crm.jdbc.url1>jdbc:mysql://192.168.101.245:3306/pop_crm1</pop-crm.crm.jdbc.url1>
-                <pop-crm.crm.jdbc.username1>pop_crm_rw</pop-crm.crm.jdbc.username1>
-                <pop-crm.crm.jdbc.password1>pop_crm_rw3ed</pop-crm.crm.jdbc.password1>
-                <!--pop crm 数据库连接配置 MySQL库2-->
-                <pop-crm.crm.jdbc.driver2>com.mysql.jdbc.Driver</pop-crm.crm.jdbc.driver2>
-                <pop-crm.crm.jdbc.url2>jdbc:mysql://192.168.101.245:3306/pop_crm2</pop-crm.crm.jdbc.url2>
-                <pop-crm.crm.jdbc.username2>pop_crm_rw</pop-crm.crm.jdbc.username2>
-                <pop-crm.crm.jdbc.password2>pop_crm_rw3ed</pop-crm.crm.jdbc.password2>
-                <!--pop crm 数据库连接配置 MySQL库3-->
-                <pop-crm.crm.jdbc.driver3>com.mysql.jdbc.Driver</pop-crm.crm.jdbc.driver3>
-                <pop-crm.crm.jdbc.url3>jdbc:mysql://192.168.101.245:3306/pop_crm3</pop-crm.crm.jdbc.url3>
-                <pop-crm.crm.jdbc.username3>pop_crm_rw</pop-crm.crm.jdbc.username3>
-                <pop-crm.crm.jdbc.password3>pop_crm_rw3ed</pop-crm.crm.jdbc.password3>
+                <pop-crm.crm.jdbc.url>jdbc:mysql://127.0.0.1:3306/iProcess</pop-crm.crm.jdbc.url>
+                <pop-crm.crm.jdbc.username>root</pop-crm.crm.jdbc.username>
+                <pop-crm.crm.jdbc.password>root</pop-crm.crm.jdbc.password>
 
             </properties>
         </profile>
@@ -140,26 +111,11 @@
                 <!--数据库连接的方式-->
                 <pop-crm.jdbc.datasource.type>dbcp</pop-crm.jdbc.datasource.type>
 
-                <!--pop crm 数据库连接配置 MySQL库-->
+                <!--数据库连接配置 MySQL库-->
                 <pop-crm.crm.jdbc.driver>com.mysql.jdbc.Driver</pop-crm.crm.jdbc.driver>
-                <pop-crm.crm.jdbc.url>jdbc:mysql://192.168.101.245:3306/pop_crm</pop-crm.crm.jdbc.url>
-                <pop-crm.crm.jdbc.username>pop_crm_rw</pop-crm.crm.jdbc.username>
-                <pop-crm.crm.jdbc.password>pop_crm_rw3ed</pop-crm.crm.jdbc.password>
-                <!--pop crm 数据库连接配置 MySQL库1-->
-                <pop-crm.crm.jdbc.driver1>com.mysql.jdbc.Driver</pop-crm.crm.jdbc.driver1>
-                <pop-crm.crm.jdbc.url1>jdbc:mysql://192.168.101.245:3306/pop_crm1</pop-crm.crm.jdbc.url1>
-                <pop-crm.crm.jdbc.username1>pop_crm_rw</pop-crm.crm.jdbc.username1>
-                <pop-crm.crm.jdbc.password1>pop_crm_rw3ed</pop-crm.crm.jdbc.password1>
-                <!--pop crm 数据库连接配置 MySQL库2-->
-                <pop-crm.crm.jdbc.driver2>com.mysql.jdbc.Driver</pop-crm.crm.jdbc.driver2>
-                <pop-crm.crm.jdbc.url2>jdbc:mysql://192.168.101.245:3306/pop_crm2</pop-crm.crm.jdbc.url2>
-                <pop-crm.crm.jdbc.username2>pop_crm_rw</pop-crm.crm.jdbc.username2>
-                <pop-crm.crm.jdbc.password2>pop_crm_rw3ed</pop-crm.crm.jdbc.password2>
-                <!--pop crm 数据库连接配置 MySQL库3-->
-                <pop-crm.crm.jdbc.driver3>com.mysql.jdbc.Driver</pop-crm.crm.jdbc.driver3>
-                <pop-crm.crm.jdbc.url3>jdbc:mysql://192.168.101.245:3306/pop_crm3</pop-crm.crm.jdbc.url3>
-                <pop-crm.crm.jdbc.username3>pop_crm_rw</pop-crm.crm.jdbc.username3>
-                <pop-crm.crm.jdbc.password3>pop_crm_rw3ed</pop-crm.crm.jdbc.password3>
+                <pop-crm.crm.jdbc.url>jdbc:mysql://127.0.0.1:3306/iProcess</pop-crm.crm.jdbc.url>
+                <pop-crm.crm.jdbc.username>root</pop-crm.crm.jdbc.username>
+                <pop-crm.crm.jdbc.password>root</pop-crm.crm.jdbc.password>
 
             </properties>
         </profile>
