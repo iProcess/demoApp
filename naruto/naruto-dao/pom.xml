@@ -25,4 +25,17 @@
         <finalName>naruto-dao-${project.version}</finalName>
     </build>
 
+<!--    <build>-->
+<!--        <finalName>TestCpuApp</finalName>  &lt;!&ndash; 最终package打包的jar名称，注意这里没有版本号了。 &ndash;&gt;-->
+<!--        <plugins>-->
+<!--            <plugin>-->
+<!--                <groupId>org.springframework.boot</groupId>-->
+<!--                <artifactId>spring-boot-maven-plugin</artifactId>-->
+<!--                <configuration>-->
+<!--                    <mainClass>com.naruto.dao.test.TestCpu</mainClass>-->
+<!--                </configuration>-->
+<!--            </plugin>-->
+<!--        </plugins>-->
+<!--    </build>-->
+
 </project>

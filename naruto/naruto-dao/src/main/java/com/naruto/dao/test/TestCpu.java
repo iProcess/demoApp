@@ -1,23 +1,10 @@
-package com.naruto.web.cpu;
+package com.naruto.dao.test;
 
-import com.naruto.service.channel.ChannelService;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 
 import java.util.concurrent.ConcurrentHashMap;
 
-@RestController
-@Slf4j
-@RequestMapping("/cpu")
-public class CpuRest {
+public class TestCpu {
 
-    @Autowired
-    ChannelService channelService;
-
-    @GetMapping("/test")
     public String test(){
         int i = 2;
         while (i > 0){
@@ -40,8 +27,7 @@ public class CpuRest {
     }
 
     public static void main(String[] args) {
-        CpuRest rest = new CpuRest();
+        TestCpu rest = new TestCpu();
         rest.test();
     }
-    
 }
