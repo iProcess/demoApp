@@ -50,7 +50,7 @@
         <!-- spring boot版本和spring版本要保持一致，不要随意修改 -->
         <!-- spring boot 2.1.8.RELEASE对应spring的版本是5.1.9.RELEASE -->
         <!--<spring.version>5.2.6.RELEASE</spring.version>-->
-        <mybatis.version>3.5.5</mybatis.version>
+        <mybatis.version>3.5.6</mybatis.version>
         <mybatis-spring.version>2.0.5</mybatis-spring.version>
         <druid.version>1.0.15</druid.version>
         <clickhouse4j.version>1.4.4</clickhouse4j.version>
